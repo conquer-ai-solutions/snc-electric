@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S&C Electric — Session Runner · Tue 7 Apr 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand:     #E63329;
+  --brand-lit: rgba(230,51,41,0.10);
+  --brand-mid: rgba(230,51,41,0.18);
+  --ink:       #0A0A12;
+  --surface:   #141420;
+  --surface-2: #1C1C2C;
+  --surface-3: #222235;
+  --border:    rgba(255,255,255,0.07);
+  --border-2:  rgba(255,255,255,0.12);
+  --text:      #E4E4F0;
+  --text-mid:  #8888AA;
+  --text-dim:  #4A4A66;
+  --green:     #38BB94;
+  --green-bg:  rgba(56,187,148,0.10);
+  --amber:     #FFA030;
+  --amber-bg:  rgba(255,160,48,0.10);
+  --red:       #F13C47;
+  --red-bg:    rgba(241,60,71,0.10);
+  --mono:      'Geist Mono', monospace;
+  --r:         8px;
+  --r-lg:      12px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Geist', system-ui, sans-serif;
+  background: var(--ink);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,10,18,0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 28px; height: 52px; gap: 20px;
+}
+.topbar-logo { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.topbar-logo-dot { width:8px; height:8px; border-radius:50%; background:var(--brand); }
+.topbar-logo-text { font-size:13px; font-weight:700; color:var(--text); letter-spacing:-0.02em; }
+.topbar-divider { width:1px; height:18px; background:var(--border-2); flex-shrink:0; }
+.topbar-label { font-size:9px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); font-family:var(--mono); }
+.beat-nav { display:flex; gap:4px; flex:1; }
+.beat-btn {
+  display:flex; align-items:center; gap:7px;
+  padding:5px 12px; border-radius:6px;
+  border:1px solid transparent;
+  background:transparent; cursor:pointer;
+  font-family:'Geist',sans-serif;
+  font-size:11px; font-weight:500;
+  color:var(--text-dim);
+  transition:all .15s;
+  text-decoration:none;
+}
+.beat-btn:hover { color:var(--text); background:var(--surface-2); border-color:var(--border); }
+.beat-btn.active { color:var(--brand); background:var(--brand-lit); border-color:rgba(230,51,41,0.3); }
+.beat-btn .beat-n { font-family:var(--mono); font-size:9px; font-weight:700; opacity:0.6; }
+.timer-wrap { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.timer-display { font-family:var(--mono); font-size:15px; font-weight:600; color:var(--text); letter-spacing:0.06em; cursor:pointer; min-width:48px; }
+.timer-display.warning { color:var(--amber); }
+.timer-display.over    { color:var(--red); }
+.timer-btn { background:var(--surface-2); border:1px solid var(--border); border-radius:5px; padding:4px 8px; font-family:var(--mono); font-size:9px; font-weight:600; color:var(--text-mid); cursor:pointer; letter-spacing:0.06em; transition:all .12s; }
+.timer-btn:hover { border-color:var(--border-2); color:var(--text); }
+.room-enter-btn { background:var(--brand); border:none; border-radius:6px; padding:6px 14px; font-family:'Geist',sans-serif; font-size:11px; font-weight:700; color:white; cursor:pointer; letter-spacing:0.02em; transition:all .15s; flex-shrink:0; }
+.room-enter-btn:hover { background:#c42b22; }
+
+/* ── CLIENT STRIP ── */
+.client-strip {
+  background: var(--surface);
+  border-bottom: 2px solid var(--brand);
+  padding: 12px 28px;
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 0;
+}
+.cs-col { padding:0 20px 0 0; border-right:1px solid var(--border); }
+.cs-col:first-child { padding-left:0; }
+.cs-col:last-child  { border-right:none; padding-left:20px; padding-right:0; }
+.cs-col:not(:first-child) { padding-left:20px; }
+.cs-label { font-size:8px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--brand); margin-bottom:4px; font-family:var(--mono); }
+.cs-value { font-size:12px; font-weight:600; color:var(--text); }
+.cs-sub   { font-size:10px; color:var(--text-dim); margin-top:1px; }
+
+/* ── MAIN ── */
+.main { max-width:1200px; margin:0 auto; padding:0 28px 80px; }
+
+/* ── BEAT SECTION ── */
+.beat { padding-top:36px; margin-bottom:12px; scroll-margin-top:80px; }
+.beat-header { display:flex; align-items:flex-start; gap:20px; margin-bottom:24px; }
+.beat-badge {
+  display:flex; flex-direction:column; align-items:center;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r); padding:10px 16px; flex-shrink:0; min-width:64px;
+}
+.beat-badge-n { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--brand); line-height:1; }
+.beat-badge-label { font-family:var(--mono); font-size:7px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-top:3px; }
+.beat-badge.active-beat { background:var(--brand-lit); border-color:rgba(230,51,41,0.35); }
+.beat-meta { flex:1; }
+.beat-title { font-size:20px; font-weight:700; color:var(--text); letter-spacing:-0.02em; line-height:1.2; margin-bottom:5px; }
+.beat-sub { font-size:13px; color:var(--text-mid); line-height:1.6; max-width:680px; }
+.beat-timing { font-size:10px; font-weight:600; color:var(--text-dim); background:var(--surface-2); border:1px solid var(--border); border-radius:20px; padding:3px 10px; font-family:var(--mono); display:inline-block; margin-top:8px; }
+.beat-divider { height:1px; background:var(--border); margin:40px 0; }
+
+/* ── LAYOUT GRIDS ── */
+.context-grid { display:grid; grid-template-columns:1fr 300px; gap:14px; align-items:start; }
+.probe-grid   { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.synth-grid   { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+
+/* ── PANELS ── */
+.panel { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden; }
+.panel-head { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.panel-head-title { font-size:11px; font-weight:700; color:var(--text); }
+.panel-head-hint  { font-size:10px; color:var(--text-dim); font-style:italic; }
+
+/* ── SIGNAL CHIPS ── */
+.signals-section { padding:14px 18px; border-bottom:1px solid var(--border); }
+.signal-label { font-size:8px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); margin-bottom:8px; font-family:var(--mono); }
+.signal-chip {
+  display:flex; align-items:center; gap:8px;
+  font-size:11.5px; color:var(--text-mid); padding:8px 10px;
+  background:var(--surface-2); border:1px solid var(--border);
+  border-radius:6px; cursor:pointer; transition:all .12s;
+  user-select:none; margin-bottom:5px;
+}
+.signal-chip:hover { border-color:var(--brand); color:var(--text); }
+.signal-chip.tagged { border-color:var(--brand); background:var(--brand-lit); color:var(--text); }
+.signal-chip.tagged .chip-dot { background:var(--brand); }
+.chip-dot { width:5px; height:5px; border-radius:50%; background:var(--text-dim); flex-shrink:0; transition:background .12s; }
+
+/* ── NOTES ── */
+.notes-area { padding:14px 18px; }
+.notes-label { font-size:8px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); margin-bottom:8px; font-family:var(--mono); }
+.notes-input {
+  width:100%; background:var(--surface-2); border:1px solid var(--border);
+  border-radius:var(--r); padding:12px 14px;
+  font-family:'Geist',sans-serif; font-size:12px; color:var(--text);
+  outline:none; resize:vertical; min-height:100px; line-height:1.6;
+  transition:border-color .15s;
+}
+.notes-input:focus { border-color:var(--brand); }
+.notes-input::placeholder { color:var(--text-dim); }
+
+/* ── SIDEBAR BOXES ── */
+.sidebar-box { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:16px; margin-bottom:10px; }
+.sb-label { font-size:8px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); margin-bottom:10px; font-family:var(--mono); }
+.sb-item { font-size:11.5px; color:var(--text-mid); display:flex; align-items:flex-start; gap:8px; line-height:1.45; padding:6px 0; border-bottom:1px solid var(--border); }
+.sb-item:last-child { border-bottom:none; }
+.sb-item-icon { font-size:12px; flex-shrink:0; margin-top:1px; }
+.sb-item strong { color:var(--text); }
+.sidebar-box.accent { background:var(--brand-lit); border-color:rgba(230,51,41,0.25); }
+.sb-accent-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:6px; line-height:1.3; }
+.sb-accent-body { font-size:11.5px; color:var(--text-mid); line-height:1.55; }
+
+/* ── TRANSCRIPT QUOTES ── */
+.transcript-box { background:var(--surface-2); border:1px solid var(--border); border-left:2px solid var(--amber); border-radius:var(--r); padding:12px 14px; margin-bottom:8px; }
+.transcript-label { font-size:8px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--amber); font-family:var(--mono); margin-bottom:5px; }
+.transcript-quote { font-size:11.5px; color:var(--text-mid); line-height:1.6; font-style:italic; }
+.transcript-attr  { font-size:10px; color:var(--text-dim); margin-top:4px; font-style:normal; }
+
+/* ── PROBE CARDS ── */
+.probe-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r-lg); padding:20px;
+  transition:border-color .15s; position:relative; overflow:hidden;
+}
+.probe-card:hover { border-color:var(--border-2); }
+.probe-card.asked { border-color:rgba(56,187,148,0.35); background:rgba(56,187,148,0.04); }
+.probe-card.asked::after { content:'✓ Asked'; position:absolute; top:14px; right:14px; font-size:9px; font-weight:700; color:var(--green); font-family:var(--mono); letter-spacing:0.08em; }
+.probe-num { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--brand); margin-bottom:8px; }
+.probe-q { font-size:13.5px; font-weight:600; color:var(--text); margin-bottom:6px; line-height:1.4; }
+.probe-intent { font-size:11.5px; color:var(--text-dim); line-height:1.55; font-style:italic; margin-bottom:10px; }
+.probe-listen { font-size:11px; color:var(--text-mid); line-height:1.5; }
+.probe-listen strong { color:var(--amber); font-weight:600; }
+.probe-ask-btn {
+  margin-top:12px; padding:6px 12px; border-radius:5px;
+  border:1px solid var(--border); background:transparent;
+  font-family:'Geist',sans-serif; font-size:10px; font-weight:600;
+  color:var(--text-dim); cursor:pointer; transition:all .12s;
+}
+.probe-ask-btn:hover { border-color:var(--green); color:var(--green); }
+.probe-card.asked .probe-ask-btn { border-color:var(--green); color:var(--green); }
+
+/* ── TASHDE ── */
+.tashde-wrap { margin-top:20px; border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden; }
+.tashde-toggle {
+  display:flex; align-items:center; justify-content:space-between;
+  width:100%; padding:14px 20px; background:var(--surface-2);
+  border:none; cursor:pointer; font-family:'Geist',sans-serif;
+  transition:background .12s; gap:12px;
+}
+.tashde-toggle:hover { background:var(--surface-3); }
+.tashde-toggle-left { display:flex; align-items:center; gap:10px; }
+.tashde-toggle-badge { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:2px 8px; border-radius:20px; background:var(--brand-lit); color:var(--brand); font-family:var(--mono); flex-shrink:0; }
+.tashde-toggle-title { font-size:13px; font-weight:700; color:var(--text); }
+.tashde-toggle-sub { font-size:11px; color:var(--text-dim); }
+.tashde-toggle-arrow { color:var(--text-dim); font-size:10px; transition:transform .15s; flex-shrink:0; }
+.tashde-wrap.open .tashde-toggle-arrow { transform:rotate(180deg); }
+.tashde-body { display:none; padding:20px; }
+.tashde-wrap.open .tashde-body { display:block; }
+.tashde-intro { font-size:12px; color:var(--text-mid); line-height:1.6; margin-bottom:16px; padding:12px 14px; background:var(--surface-2); border-radius:var(--r); }
+.tashde-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+.tashde-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:16px; transition:border-color .15s; }
+.tashde-card.filled { border-color:rgba(56,187,148,0.35); }
+.tashde-card-head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.tashde-letter { width:28px; height:28px; border-radius:6px; background:var(--brand-lit); border:1px solid rgba(230,51,41,0.25); display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:14px; font-weight:700; color:var(--brand); flex-shrink:0; }
+.tashde-word { font-size:13px; font-weight:700; color:var(--text); }
+.tashde-ai-flag { font-size:9px; font-weight:700; color:var(--text-dim); font-family:var(--mono); margin-left:auto; }
+.tashde-question { font-size:11.5px; color:var(--text-mid); line-height:1.55; font-style:italic; margin-bottom:10px; }
+.tashde-input { width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:6px; padding:8px 10px; font-family:'Geist',sans-serif; font-size:11px; color:var(--text); outline:none; resize:vertical; min-height:60px; line-height:1.5; transition:border-color .15s; }
+.tashde-input:focus { border-color:var(--brand); }
+.tashde-input::placeholder { color:var(--text-dim); }
+
+/* ── SYNTHESIS CARDS ── */
+.synth-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r-lg); padding:20px; position:relative; overflow:hidden;
+  transition:border-color .15s;
+}
+.synth-card.deployed { border-color:rgba(56,187,148,0.35); background:rgba(56,187,148,0.04); }
+.synth-card.deployed::after { content:'✓ Deployed'; position:absolute; top:14px; right:14px; font-size:9px; font-weight:700; color:var(--green); font-family:var(--mono); }
+.synth-tag { font-size:9px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:2px 8px; border-radius:20px; margin-bottom:10px; display:inline-block; font-family:var(--mono); }
+.synth-tag.quote-to-contract { background:rgba(230,51,41,0.1); color:var(--brand); }
+.synth-tag.eto              { background:rgba(255,160,48,0.1); color:var(--amber); }
+.synth-tag.bom              { background:rgba(56,187,148,0.1); color:var(--green); }
+.synth-tag.universal        { background:rgba(255,255,255,0.06); color:var(--text-dim); }
+.synth-concept { font-size:14px; font-weight:700; color:var(--text); margin-bottom:6px; line-height:1.35; }
+.synth-bridge { font-size:11.5px; color:var(--brand); font-family:var(--mono); font-weight:600; margin-bottom:8px; }
+.synth-body { font-size:11.5px; color:var(--text-mid); line-height:1.6; margin-bottom:10px; }
+.synth-earned { font-size:11px; color:var(--text-dim); line-height:1.5; border-top:1px solid var(--border); padding-top:8px; }
+.synth-earned strong { color:var(--amber); }
+.deploy-btn {
+  margin-top:10px; padding:6px 12px; border-radius:5px;
+  border:1px solid var(--border); background:transparent;
+  font-family:'Geist',sans-serif; font-size:10px; font-weight:600;
+  color:var(--text-dim); cursor:pointer; transition:all .12s;
+}
+.deploy-btn:hover { border-color:var(--green); color:var(--green); }
+
+/* ── SHOW ── */
+.show-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.show-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; }
+.show-card.primary { border-color:rgba(230,51,41,0.35); }
+.show-label { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--brand); font-family:var(--mono); margin-bottom:10px; }
+.show-title { font-size:15px; font-weight:700; color:var(--text); margin-bottom:8px; }
+.show-body { font-size:12px; color:var(--text-mid); line-height:1.65; margin-bottom:14px; }
+.show-action-btn {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:9px 16px; border-radius:6px;
+  border:none; cursor:pointer;
+  font-family:'Geist',sans-serif; font-size:12px; font-weight:700;
+  transition:all .15s; text-decoration:none;
+}
+.show-action-btn.primary { background:var(--brand); color:white; }
+.show-action-btn.primary:hover { background:#c42b22; }
+.show-action-btn.secondary { background:var(--surface-2); color:var(--text); border:1px solid var(--border); }
+.show-action-btn.secondary:hover { border-color:var(--border-2); }
+.talking-points { margin-top:14px; }
+.tp-label { font-size:8px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); font-family:var(--mono); margin-bottom:8px; }
+.tp-item { display:flex; gap:8px; font-size:11.5px; color:var(--text-mid); padding:6px 0; border-bottom:1px solid var(--border); line-height:1.5; }
+.tp-item:last-child { border-bottom:none; }
+.tp-item strong { color:var(--text); }
+
+/* ── VALIDATE ── */
+.validate-grid { display:grid; grid-template-columns:1fr 340px; gap:14px; }
+.vp-head { padding:14px 18px; border-bottom:1px solid var(--border); }
+.vp-head-title { font-size:12px; font-weight:700; color:var(--text); margin-bottom:3px; }
+.vp-head-sub { font-size:10px; color:var(--text-dim); }
+.vp-checks { padding:14px 18px; }
+.vp-check-item {
+  display:flex; align-items:center; gap:12px;
+  padding:10px 0; border-bottom:1px solid var(--border);
+  cursor:pointer; transition:opacity .12s;
+}
+.vp-check-item:last-child { border-bottom:none; }
+.vp-check-item:hover { opacity:0.8; }
+.vp-check-box {
+  width:22px; height:22px; border-radius:5px;
+  border:1px solid var(--border-2); background:var(--surface-2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700; flex-shrink:0;
+  transition:all .15s; font-family:var(--mono);
+}
+.vp-check-item.confirmed .vp-check-box { background:var(--green-bg); border-color:rgba(56,187,148,0.4); color:var(--green); }
+.vp-check-item.corrected .vp-check-box { background:var(--red-bg); border-color:rgba(241,60,71,0.4); color:var(--red); }
+.vp-check-text { font-size:12px; color:var(--text-mid); line-height:1.5; flex:1; }
+.vp-examples { padding:14px 18px; border-top:1px solid var(--border); }
+.vp-ex-label { font-size:8px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); margin-bottom:8px; font-family:var(--mono); }
+.vp-ex-item { font-size:11px; color:var(--text-dim); line-height:1.55; margin-bottom:6px; }
+.vp-ex-item em { color:var(--text-mid); font-style:italic; }
+
+/* ── CLOSE PANEL ── */
+.close-panel { display:flex; flex-direction:column; gap:12px; }
+.one-step { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:18px; }
+.one-step-label { font-size:8px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--brand); font-family:var(--mono); margin-bottom:8px; }
+.one-step-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:14px; line-height:1.4; }
+.osf-row { margin-bottom:10px; }
+.osf-label { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); font-family:var(--mono); margin-bottom:4px; }
+.osf-input { width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:6px; padding:8px 12px; font-family:'Geist',sans-serif; font-size:12px; color:var(--text); outline:none; transition:border-color .15s; }
+.osf-input:focus { border-color:var(--brand); }
+.osf-input::placeholder { color:var(--text-dim); }
+.rule-box { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:16px; }
+.rule-box-title { font-size:12px; font-weight:700; color:var(--text); margin-bottom:6px; }
+.rule-box-body { font-size:11.5px; color:var(--text-mid); line-height:1.6; }
+.rule-box-body em { color:var(--text); }
+.commit-strip { background:var(--brand-lit); border:1px solid rgba(230,51,41,0.25); border-radius:var(--r-lg); padding:16px; }
+.commit-title { font-size:12px; font-weight:700; color:var(--brand); margin-bottom:6px; }
+.commit-body { font-size:11.5px; color:var(--text-mid); line-height:1.6; }
+
+/* ── PROGRESS BAR ── */
+.progress-bar { position:fixed; bottom:0; left:0; right:0; height:2px; background:var(--surface-2); z-index:200; }
+.progress-fill { height:100%; background:var(--brand); transition:width .1s; width:0%; }
+
+/* ── ROOM MODE ── */
+#roomMode {
+  display:none; position:fixed; inset:0; z-index:1000;
+  background:var(--ink); flex-direction:column;
+}
+#roomMode.active { display:flex; }
+.room-topbar {
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:0 28px; height:52px;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-shrink:0;
+}
+.room-topbar-left { display:flex; align-items:center; gap:14px; }
+.room-logo-dot { width:8px; height:8px; border-radius:50%; background:var(--brand); }
+.room-topbar-divider { width:1px; height:18px; background:var(--border-2); }
+.room-client-name { font-size:14px; font-weight:700; color:var(--text); letter-spacing:-0.01em; }
+.room-topbar-right { display:flex; align-items:center; gap:10px; }
+.room-timer { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--text); letter-spacing:0.06em; min-width:56px; }
+.room-timer.warning { color:var(--amber); }
+.room-timer.over    { color:var(--red); }
+.room-timer-btn { background:var(--surface-2); border:1px solid var(--border); border-radius:5px; padding:5px 10px; font-family:var(--mono); font-size:10px; font-weight:600; color:var(--text-mid); cursor:pointer; letter-spacing:0.06em; transition:all .12s; }
+.room-timer-btn:hover { border-color:var(--border-2); color:var(--text); }
+.room-exit-btn { background:transparent; border:1px solid var(--border); border-radius:6px; padding:6px 14px; font-family:'Geist',sans-serif; font-size:11px; font-weight:600; color:var(--text-mid); cursor:pointer; transition:all .12s; }
+.room-exit-btn:hover { border-color:var(--border-2); color:var(--text); }
+.room-body { flex:1; display:grid; grid-template-columns:1fr 1fr; gap:0; overflow:hidden; }
+.room-col { padding:28px; border-right:1px solid var(--border); overflow-y:auto; }
+.room-col:last-child { border-right:none; }
+.room-col-label { font-size:9px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); font-family:var(--mono); margin-bottom:16px; }
+.room-q {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r); padding:16px; margin-bottom:8px;
+  cursor:pointer; transition:all .15s;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.room-q:hover { border-color:var(--border-2); }
+.room-q.asked { border-color:rgba(56,187,148,0.35); background:rgba(56,187,148,0.04); opacity:0.6; }
+.room-q-num { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--brand); flex-shrink:0; padding-top:1px; }
+.room-q-text { font-size:13px; font-weight:600; color:var(--text); line-height:1.4; margin-bottom:4px; }
+.room-q-sub { font-size:11px; color:var(--text-dim); line-height:1.45; }
+.room-right-inner { display:flex; flex-direction:column; gap:14px; }
+.room-section-label { font-size:9px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); font-family:var(--mono); margin-bottom:10px; }
+.room-signal-chips { display:flex; flex-direction:column; gap:5px; }
+.room-signal-chip {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 12px; background:var(--surface-2);
+  border:1px solid var(--border); border-radius:6px;
+  font-size:11.5px; color:var(--text-mid); cursor:pointer; transition:all .12s;
+}
+.room-signal-chip:hover { border-color:var(--brand); color:var(--text); }
+.room-signal-chip.tagged { border-color:rgba(56,187,148,0.35); background:rgba(56,187,148,0.06); color:var(--text); }
+.room-field-label { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); font-family:var(--mono); margin-bottom:4px; }
+.room-field-input { width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:6px; padding:8px 12px; font-family:'Geist',sans-serif; font-size:12px; color:var(--text); outline:none; transition:border-color .15s; margin-bottom:10px; }
+.room-field-input:focus { border-color:var(--brand); }
+.room-field-input::placeholder { color:var(--text-dim); }
+.room-demo-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:12px; background:var(--brand); border:none; border-radius:var(--r); font-family:'Geist',sans-serif; font-size:13px; font-weight:700; color:white; cursor:pointer; transition:all .15s; text-decoration:none; }
+.room-demo-btn:hover { background:#c42b22; }
+
+/* ── INSTINCT PROBES ── */
+.probe-instinct { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-lg); padding:16px 20px; margin-top:12px; }
+.pi-label { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--amber); font-family:var(--mono); margin-bottom:10px; }
+.pi-item { font-size:11.5px; color:var(--text-mid); padding:6px 0; border-bottom:1px solid var(--border); line-height:1.55; }
+.pi-item:last-child { border-bottom:none; }
+.pi-item em { color:var(--text); }
+
+/* ── SPEC CHECKPOINT ── */
+.spec-checkpoint { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:18px 20px; margin-top:16px; display:flex; gap:20px; align-items:flex-start; }
+.spec-meter { flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:6px; width:80px; }
+.spec-meter-label { font-size:8px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); font-family:var(--mono); text-align:center; }
+.spec-bars { display:flex; gap:3px; }
+.spec-bar { width:10px; height:24px; border-radius:3px; background:var(--surface-2); border:1px solid var(--border); transition:all .2s; }
+.spec-bar.filled { background:var(--green); border-color:var(--green); }
+.spec-status { font-family:var(--mono); font-size:9px; font-weight:700; text-align:center; letter-spacing:0.06em; }
+.spec-status.low { color:var(--red); }
+.spec-status.mid { color:var(--amber); }
+.spec-status.high { color:var(--green); }
+.spec-questions { flex:1; }
+.spec-q { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-mid); padding:7px 0; border-bottom:1px solid var(--border); cursor:pointer; transition:opacity .12s; }
+.spec-q:last-of-type { border-bottom:none; }
+.spec-q:hover { opacity:0.8; }
+.spec-q-check { width:16px; height:16px; border-radius:4px; border:1px solid var(--border-2); background:var(--surface-2); display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; font-family:var(--mono); color:var(--green); flex-shrink:0; transition:all .15s; }
+.spec-q.done .spec-q-check { background:var(--green-bg); border-color:rgba(56,187,148,0.4); }
+.spec-cost-redirect { display:none; margin-top:10px; font-size:11px; color:var(--amber); background:var(--amber-bg); border:1px solid rgba(255,160,48,0.25); border-radius:var(--r); padding:10px 12px; line-height:1.6; }
+.spec-cost-redirect.show { display:block; }
+</style>
+</head>
+<body>
+
+<!-- ══ TOP BAR ══ -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <div class="topbar-logo-dot"></div>
+    <span class="topbar-logo-text">Conquer AI</span>
+  </div>
+  <div class="topbar-divider"></div>
+  <span class="topbar-label">S&amp;C Electric · Whiteboard · Tue 7 Apr 2026</span>
+  <div class="topbar-divider"></div>
+  <nav class="beat-nav">
+    <a class="beat-btn active" href="#beat-1"><span class="beat-n">01</span> Context</a>
+    <a class="beat-btn" href="#beat-2"><span class="beat-n">02</span> Probe</a>
+    <a class="beat-btn" href="#beat-3"><span class="beat-n">03</span> Synthesis</a>
+    <a class="beat-btn" href="#beat-4"><span class="beat-n">04</span> Show</a>
+    <a class="beat-btn" href="#beat-5"><span class="beat-n">05</span> Validate &amp; Close</a>
+  </nav>
+  <div class="topbar-divider"></div>
+  <div class="timer-wrap">
+    <div class="timer-display" id="timerDisplay">00:00</div>
+    <button class="timer-btn" id="timerStartBtn">START</button>
+    <button class="timer-btn" id="timerResetBtn">RESET</button>
+  </div>
+  <div class="topbar-divider"></div>
+  <button class="room-enter-btn" id="enterRoomBtn" onclick="enterRoomMode()">⚡ Room Mode</button>
+</div>
+
+<!-- ══ CLIENT STRIP ══ -->
+<div class="client-strip">
+  <div class="cs-col">
+    <div class="cs-label">Account</div>
+    <div class="cs-value">S&amp;C Electric</div>
+    <div class="cs-sub">Fortune 500 · Chicago · ETO manufacturer</div>
+  </div>
+  <div class="cs-col">
+    <div class="cs-label">Session</div>
+    <div class="cs-value">Whiteboard · 90 min</div>
+    <div class="cs-sub">Tue 7 Apr 2026 · 7:00 pm UK / 1:00 pm CT</div>
+  </div>
+  <div class="cs-col">
+    <div class="cs-label">S&amp;C in the room</div>
+    <div class="cs-value">Anders S · Anders H · Ernst · Joseph</div>
+    <div class="cs-sub">CEO · President · CTO · CPD</div>
+  </div>
+  <div class="cs-col">
+    <div class="cs-label">Conquer</div>
+    <div class="cs-value">David · Bolaji · Luke · Atlee</div>
+    <div class="cs-sub">All remote · Atlee is the relationship anchor</div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+<!-- ══ BEAT 1: CONTEXT ══ -->
+<div class="beat" id="beat-1">
+  <div class="beat-header">
+    <div class="beat-badge active-beat">
+      <div class="beat-badge-n">01</div>
+      <div class="beat-badge-label">Context</div>
+    </div>
+    <div class="beat-meta">
+      <div class="beat-title">Create space. Let them talk. Don't fill the silence.</div>
+      <div class="beat-sub">S&C gave us a lot in January. Now we need to hear what's changed, what's moved up the priority list, and who in the room is most engaged. The opening move is the same as always — ask, then shut up.</div>
+      <div class="beat-timing">10–20 min · They talk · You tag what's emerging</div>
+    </div>
+  </div>
+
+  <div class="context-grid">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-head-title">Signal tracker — tag what you're hearing</div>
+        <div class="panel-head-hint">Click to mark. Informs your Beat 3 frame.</div>
+      </div>
+
+      <div class="signals-section">
+        <div class="signal-label">Quote-to-contract signals</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Mentions humans between customer ask and PO</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Variety / unpredictability in inbound documents</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>T&amp;C or LD clause problems downstream</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Salesforce mentioned as pain not solution</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Spec review or terms review as bottleneck</div>
+      </div>
+
+      <div class="signals-section">
+        <div class="signal-label">ETO / design signals</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Same spec → different designs (two engineers)</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>"White piece of paper every time" — no reuse</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Configurator frustration — too complex, clunky</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Preferred design universe — standardise inside</div>
+      </div>
+
+      <div class="signals-section">
+        <div class="signal-label">BOM / inventory / ERP signals</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Oracle ERP mentioned as problem</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Missing SKUs / mismatched inventory</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Drawing revisions / supplier changes not propagating</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>"Symptom is financial — root cause is upstream"</div>
+      </div>
+
+      <div class="notes-area">
+        <div class="notes-label">Live notes — their exact words</div>
+        <textarea class="notes-input" placeholder="Quote them directly. The language they use to describe the problem is the language you'll feed back in Beat 3.
+
+e.g. 'We start with a white piece of paper every time' or 'by the time it hits manufacturing it's too late'"></textarea>
+      </div>
+    </div>
+
+    <div>
+      <div class="sidebar-box accent">
+        <div class="sb-accent-title">Opening move</div>
+        <div class="sb-accent-body">"Before we show you anything — since January, what's moved up the priority list? What are you actually trying to solve this year?" Then stop. Don't reference the prep. Let them re-set the agenda.</div>
+      </div>
+
+      <div class="sidebar-box">
+        <div class="sb-label">What you're listening for</div>
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div class="sb-item"><div class="sb-item-icon">🎯</div><div>The <strong>specific verb</strong> — not "quote process issues" but "someone manually reads every spec"</div></div>
+          <div class="sb-item"><div class="sb-item-icon">🎯</div><div>Who speaks first — <strong>Joseph</strong> will frame commercially, <strong>Anders S</strong> will frame strategically, <strong>Ernst</strong> will push on tech</div></div>
+          <div class="sb-item"><div class="sb-item-icon">🎯</div><div>Whether <strong>ETO configurator</strong> or <strong>quote-to-contract</strong> takes priority today</div></div>
+          <div class="sb-item"><div class="sb-item-icon">🎯</div><div>Any mention of <strong>data centre / switchgear demand</strong> — that's urgency context</div></div>
+        </div>
+      </div>
+
+      <div class="sidebar-box">
+        <div class="sb-label">From the January transcript</div>
+        <div class="transcript-box">
+          <div class="transcript-label">Joseph — closing the call</div>
+          <div class="transcript-quote">"Where I think there's the clearest technology-plus-problem fit — it's the quote-to-contract cycle. Terms and conditions review versus spec review. There's so much variety in how that comes through Salesforce, with a lot of humans involved."</div>
+          <div class="transcript-attr">— Joseph Matamoros, 30 Jan 2026</div>
+        </div>
+        <div class="transcript-box">
+          <div class="transcript-label">Anders S — on ETO</div>
+          <div class="transcript-quote">"It needs to be standardised on the inside and customised on the outside. That's the grey area — if you can get that right, it's the Dell computer model."</div>
+          <div class="transcript-attr">— Anders Sjoelin, 30 Jan 2026</div>
+        </div>
+        <div class="transcript-box">
+          <div class="transcript-label">Anders H — on urgency</div>
+          <div class="transcript-quote">"I care very much that it gets done right. Because if it's not done right, I pay the price."</div>
+          <div class="transcript-attr">— Anders Hultberg, 30 Jan 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="beat-divider"></div>
+
+<!-- ══ BEAT 2: PROBE ══ -->
+<div class="beat" id="beat-2">
+  <div class="beat-header">
+    <div class="beat-badge">
+      <div class="beat-badge-n">02</div>
+      <div class="beat-badge-label">Probe</div>
+    </div>
+    <div class="beat-meta">
+      <div class="beat-title">Surgical questions. Follow what they said, not the sequence.</div>
+      <div class="beat-sub">These are deployed responsively — when the context earns them. Don't run through them like a checklist. Q6 is the most important: it's the anchor for Beat 5.</div>
+      <div class="beat-timing">10–20 min · One thread at a time · Follow the energy in the room</div>
+    </div>
+  </div>
+
+  <div class="probe-grid">
+    <div class="probe-card" id="pc1">
+      <div class="probe-num">Q1 — Quote-to-contract</div>
+      <div class="probe-q">Walk me through what happens from the moment a customer sends in a spec. Who touches it, where does it go, and where does it fall down?</div>
+      <div class="probe-intent">Gets the actual process on the table — not the idealised version. You need to know who reads the documents today, in what order, and where the gaps are.</div>
+      <div class="probe-listen"><strong>Listen for:</strong> a specific person's name, a specific moment of manual work, the phrase "it depends" — that's where the AI opportunity lives.</div>
+      <button class="probe-ask-btn" onclick="toggleAsked('pc1',this)">Mark as asked</button>
+    </div>
+
+    <div class="probe-card" id="pc2">
+      <div class="probe-num">Q2 — Quote-to-contract</div>
+      <div class="probe-q">When a customer sends in non-standard terms — an unusual LD clause, a warranty requirement you don't normally accept — how does that get caught? Who catches it?</div>
+      <div class="probe-intent">Surfaces the commercial risk in the current process and names the person bearing it. That person is your champion for the solution.</div>
+      <div class="probe-listen"><strong>Listen for:</strong> "usually someone catches it" — that's the gap. "It's sometimes caught after we've already quoted" — that's the fire.</div>
+      <button class="probe-ask-btn" onclick="toggleAsked('pc2',this)">Mark as asked</button>
+    </div>
+
+    <div class="probe-card" id="pc3">
+      <div class="probe-num">Q3 — ETO / design</div>
+      <div class="probe-q">You mentioned two engineers given the same spec come back with two different designs. Is there a documented "preferred" universe of designs — or is it tribal knowledge?</div>
+      <div class="probe-intent">Establishes whether there's a baseline to learn from or whether we'd need to build the standard first. The answer also surfaces whether this is a process problem or a data problem.</div>
+      <div class="probe-listen"><strong>Listen for:</strong> "some of it is written down" — that's the starting point. "It lives in people's heads" — that changes the scope entirely.</div>
+      <button class="probe-ask-btn" onclick="toggleAsked('pc3',this)">Mark as asked</button>
+    </div>
+
+    <div class="probe-card" id="pc4">
+      <div class="probe-num">Q4 — BOM / upstream</div>
+      <div class="probe-q">When inventory or BOM errors surface — can you give me a concrete example of the last time it burned you? What was the upstream cause?</div>
+      <div class="probe-intent">Grounds the abstract ERP/BOM problem in a real event. Real examples always reveal the actual problem, not the stated one. Used at Goodman — changed the entire scope.</div>
+      <div class="probe-listen"><strong>Listen for:</strong> a drawing revision, a supplier change, a missed SKU — those are language problems upstream, not data problems downstream.</div>
+      <button class="probe-ask-btn" onclick="toggleAsked('pc4',this)">Mark as asked</button>
+    </div>
+
+    <div class="probe-card" id="pc5">
+      <div class="probe-num">Q5 — Technology</div>
+      <div class="probe-q">Beyond Salesforce and M365 — what does the technology landscape look like around the commercial process? Has anything AI-adjacent been tried already?</div>
+      <div class="probe-intent">Surfaces the integration surface and any existing AI investments. Ernst will engage most here. Also reveals whether Copilot is doing anything useful or just sitting there.</div>
+      <div class="probe-listen"><strong>Listen for:</strong> "Copilot is deployed but nobody uses it for this" — that's a buying signal. "We tried X and it didn't work" — that's scope intelligence.</div>
+      <button class="probe-ask-btn" onclick="toggleAsked('pc5',this)">Mark as asked</button>
+    </div>
+
+    <div class="probe-card" id="pc6">
+      <div class="probe-num">Q6 — Close beat · most important</div>
+      <div class="probe-q">What would have to be true for you to say, six months from now, that this was one of the best decisions you made this year?</div>
+      <div class="probe-intent">Sets success criteria in their words. Whatever they say here is what you validate against in Beat 5. It also reveals whether this is a strategic priority or a tactical fix.</div>
+      <div class="probe-listen"><strong>Listen for:</strong> emotional language alongside metrics. "My team stops dreading Mondays" is more useful than "20% efficiency gain" — it tells you what actually matters.</div>
+      <button class="probe-ask-btn" onclick="toggleAsked('pc6',this)">Mark as asked</button>
+    </div>
+  </div>
+
+  <div class="probe-instinct">
+    <div class="pi-label">⚡ S&C-specific instinct probes — from the transcript</div>
+    <div class="pi-item"><em>"Who actually reads the inbound spec today — and how many times does a human touch it before a quote goes out?"</em> — surfaces the manual work count directly.</div>
+    <div class="pi-item"><em>"If you solved the commercial process problem — how much of the BOM/inventory issue would disappear on its own?"</em> — tests Joseph's upstream theory from January.</div>
+    <div class="pi-item"><em>"Is the problem that you're building too many different designs — or that you're building the same design differently every time?"</em> — unlocks the ETO conversation cleanly.</div>
+    <div class="pi-item"><em>"What's the consequence when a T&amp;C issue is caught after a quote is already in the customer's hands?"</em> — makes the commercial risk concrete.</div>
+  </div>
+
+  <!-- TASHDE -->
+  <div class="tashde-wrap" id="tashdeWrap">
+    <button class="tashde-toggle" onclick="document.getElementById('tashdeWrap').classList.toggle('open')">
+      <div class="tashde-toggle-left">
+        <span class="tashde-toggle-badge">Deep map</span>
+        <span class="tashde-toggle-title">TASHDE Process Mapper</span>
+        <span class="tashde-toggle-sub">— deploy once the quote-to-contract process is on the table</span>
+      </div>
+      <span class="tashde-toggle-arrow">▼</span>
+    </button>
+    <div class="tashde-body">
+      <div class="tashde-intro">
+        <strong>When to open this:</strong> The probes have confirmed quote-to-contract is the priority and at least one person has described the actual process. Now map it systematically. Each dimension directly informs the pre-proposal scope.
+      </div>
+      <div class="tashde-grid">
+        <div class="tashde-card" id="tc-t">
+          <div class="tashde-card-head">
+            <div class="tashde-letter">T</div>
+            <div class="tashde-word">Triggers</div>
+            <div class="tashde-ai-flag">Entry point</div>
+          </div>
+          <div class="tashde-question">"What starts this process? Is it an email, a Salesforce record, a phone call — and is it always the same channel?"</div>
+          <textarea class="tashde-input" data-tashde="T" placeholder="e.g. Customer emails spec PDF / comes through Salesforce / arrives via broker..." oninput="markFilled('tc-t',this)"></textarea>
+        </div>
+        <div class="tashde-card" id="tc-a">
+          <div class="tashde-card-head">
+            <div class="tashde-letter">A</div>
+            <div class="tashde-word">Actors</div>
+            <div class="tashde-ai-flag">Who bears it</div>
+          </div>
+          <div class="tashde-question">"Who touches this, in what order? Is it the same person for every document or does it depend on size / complexity?"</div>
+          <textarea class="tashde-input" data-tashde="A" placeholder="e.g. Sales engineer reads spec, commercial reviews T&Cs, legal sees anything non-standard..." oninput="markFilled('tc-a',this)"></textarea>
+        </div>
+        <div class="tashde-card" id="tc-s">
+          <div class="tashde-card-head">
+            <div class="tashde-letter">S</div>
+            <div class="tashde-word">Systems</div>
+            <div class="tashde-ai-flag">Integration surface</div>
+          </div>
+          <div class="tashde-question">"What tools does this process touch? Salesforce, email, Excel, Oracle, something else? Where does data live between steps?"</div>
+          <textarea class="tashde-input" data-tashde="S" placeholder="e.g. Email → manual extract to Excel → Salesforce opportunity created by hand..." oninput="markFilled('tc-s',this)"></textarea>
+        </div>
+        <div class="tashde-card" id="tc-d">
+          <div class="tashde-card-head">
+            <div class="tashde-letter">D</div>
+            <div class="tashde-word">Decisions</div>
+            <div class="tashde-ai-flag">AI boundary</div>
+          </div>
+          <div class="tashde-question">"At what point does someone have to make a judgment call — is this LD clause acceptable, is this spec feasible? Who makes that call?"</div>
+          <textarea class="tashde-input" data-tashde="D" placeholder="e.g. Commercial lead decides on T&C exceptions, sales engineer decides on tech feasibility..." oninput="markFilled('tc-d',this)"></textarea>
+        </div>
+        <div class="tashde-card" id="tc-h">
+          <div class="tashde-card-head">
+            <div class="tashde-letter">H</div>
+            <div class="tashde-word">Handoffs</div>
+            <div class="tashde-ai-flag">Friction point</div>
+          </div>
+          <div class="tashde-question">"Where does it pass between people? What has to happen for the next person to be able to start? What gets lost in those gaps?"</div>
+          <textarea class="tashde-input" data-tashde="H" placeholder="e.g. Sales to commercial is a manual email, commercial to legal is ad hoc, no tracking..." oninput="markFilled('tc-h',this)"></textarea>
+        </div>
+        <div class="tashde-card" id="tc-e">
+          <div class="tashde-card-head">
+            <div class="tashde-letter">E</div>
+            <div class="tashde-word">Exceptions</div>
+            <div class="tashde-ai-flag">Viability test</div>
+          </div>
+          <div class="tashde-question">"What breaks the normal flow? How often — and what's the cost when it does? Is that where most of the time goes?"</div>
+          <textarea class="tashde-input" data-tashde="E" placeholder="e.g. ~30% of RFQs have non-standard terms, each takes 3x longer, sometimes caught post-quote..." oninput="markFilled('tc-e',this)"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPECIFICITY CHECKPOINT -->
+  <div class="spec-checkpoint">
+    <div class="spec-meter">
+      <div class="spec-meter-label">Specificity</div>
+      <div class="spec-bars">
+        <div class="spec-bar" id="sb1"></div>
+        <div class="spec-bar" id="sb2"></div>
+        <div class="spec-bar" id="sb3"></div>
+        <div class="spec-bar" id="sb4"></div>
+        <div class="spec-bar" id="sb5"></div>
+      </div>
+      <div class="spec-status low" id="specStatus">Not ready</div>
+    </div>
+    <div class="spec-questions">
+      <div class="spec-q" onclick="toggleSpec(this,0)"><div class="spec-q-check">○</div><div>Named the specific process to scope</div></div>
+      <div class="spec-q" onclick="toggleSpec(this,1)"><div class="spec-q-check">○</div><div>Established volume and frequency of inbound documents</div></div>
+      <div class="spec-q" onclick="toggleSpec(this,2)"><div class="spec-q-check">○</div><div>Identified systems involved (Salesforce, M365, Oracle)</div></div>
+      <div class="spec-q" onclick="toggleSpec(this,3)"><div class="spec-q-check">○</div><div>Understood the human decision vs rules boundary</div></div>
+      <div class="spec-q" onclick="toggleSpec(this,4)"><div class="spec-q-check">○</div><div>Got Q6 answer — success criteria in their words</div></div>
+      <div class="spec-cost-redirect" id="specRedirect">
+        💬 <strong>If cost comes up before all five are checked:</strong> "We'll give you a clear range once we've validated the scope — that's exactly what the pre-proposal is for. Right now we're still learning what we'd actually be building."
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="beat-divider"></div>
+
+<!-- ══ BEAT 3: SYNTHESIS ══ -->
+<div class="beat" id="beat-3">
+  <div class="beat-header">
+    <div class="beat-badge">
+      <div class="beat-badge-n">03</div>
+      <div class="beat-badge-label">Synthesis</div>
+    </div>
+    <div class="beat-meta">
+      <div class="beat-title">Name what they just described — in Conquer's language.</div>
+      <div class="beat-sub">These concepts are mirrors, not openers. Deploy each one only when S&C has already described their own version of it. "What you're describing is exactly..." is the bridge. Don't deploy what hasn't been earned.</div>
+      <div class="beat-timing">8–12 min · Responsive framing · Only deploy earned concepts</div>
+    </div>
+  </div>
+
+  <div class="synth-grid">
+
+    <div class="synth-card" id="sc1">
+      <div class="synth-tag quote-to-contract">Quote-to-contract</div>
+      <div class="synth-concept">Unstructured data → structured commercial intelligence</div>
+      <div class="synth-bridge">"What you're describing is exactly..."</div>
+      <div class="synth-body">Every inbound RFQ, spec, and PO is unstructured data. Someone on your team is doing a transformation — reading a 40-page document and turning it into a handful of structured decisions. That transformation is what AI does well, consistently, at scale, before anyone opens their inbox.</div>
+      <div class="synth-earned"><strong>Only deploy if:</strong> they've described the manual reading process, mentioned document variety, or referenced humans in the loop between customer ask and quote.</div>
+      <button class="deploy-btn" onclick="toggleDeployed('sc1',this)">Mark as deployed</button>
+    </div>
+
+    <div class="synth-card" id="sc2">
+      <div class="synth-tag quote-to-contract">Quote-to-contract</div>
+      <div class="synth-concept">Proactive flag before the commitment is made</div>
+      <div class="synth-bridge">"The pattern we see is..."</div>
+      <div class="synth-body">The commercial risk in your process isn't that no one catches non-standard terms — it's that they're caught too late. By the time a flag surfaces, a quote is already in the customer's hands or a commitment has been made. The value isn't in catching more; it's in catching earlier.</div>
+      <div class="synth-earned"><strong>Only deploy if:</strong> they've described T&C issues being caught downstream, or referenced the cost of responding before commercial review is complete.</div>
+      <button class="deploy-btn" onclick="toggleDeployed('sc2',this)">Mark as deployed</button>
+    </div>
+
+    <div class="synth-card" id="sc3">
+      <div class="synth-tag eto">ETO / design</div>
+      <div class="synth-concept">Narrowing the solution space — not generating solutions</div>
+      <div class="synth-bridge">"The way we'd think about that is..."</div>
+      <div class="synth-body">The ETO problem isn't about generating the right design — it's about eliminating the wrong ones. There are billions of valid configurations, but a much smaller universe of preferred ones. AI's job isn't to design the product; it's to keep engineers inside the preferred universe and flag when they're drifting outside it.</div>
+      <div class="synth-earned"><strong>Only deploy if:</strong> Anders S or Joseph has described the two-engineers-same-spec problem, or the "standardised inside, customised outside" framing has come up.</div>
+      <button class="deploy-btn" onclick="toggleDeployed('sc3',this)">Mark as deployed</button>
+    </div>
+
+    <div class="synth-card" id="sc4">
+      <div class="synth-tag bom">BOM / upstream</div>
+      <div class="synth-concept">The visible problem is financial — the cause is a language problem</div>
+      <div class="synth-bridge">"What you're seeing in the ERP is..."</div>
+      <div class="synth-body">Mismatched inventory and BOM errors don't start as data problems — they start as language problems. A drawing revision that didn't propagate, a supplier change that wasn't captured, a spec that was interpreted differently. The downstream symptom is numerical, but the upstream cause is a document that didn't get read correctly, or at all.</div>
+      <div class="synth-earned"><strong>Only deploy if:</strong> Anders H has described the BOM/ERP problem and connected it to upstream process issues rather than pure data quality.</div>
+      <button class="deploy-btn" onclick="toggleDeployed('sc4',this)">Mark as deployed</button>
+    </div>
+
+    <div class="synth-card" id="sc5">
+      <div class="synth-tag universal">Universal</div>
+      <div class="synth-concept">The staircase — own our destiny first, integrate later</div>
+      <div class="synth-bridge">"The way we'd want to approach this..."</div>
+      <div class="synth-body">The fastest path to working software isn't starting in your environment — it's starting in ours, with your data and your documents, and proving the extraction works before we touch your DevOps team. Phase 1 lives in Conquer's cloud. Phase 2 moves it into yours. That's how we ship in three months instead of six.</div>
+      <div class="synth-earned"><strong>Only deploy if:</strong> Ernst has asked about integration complexity, or the conversation has moved toward scoping and timeline.</div>
+      <button class="deploy-btn" onclick="toggleDeployed('sc5',this)">Mark as deployed</button>
+    </div>
+
+    <div class="synth-card" id="sc6">
+      <div class="synth-tag universal">Universal</div>
+      <div class="synth-concept">Start narrow, ship fast, earn the right to expand</div>
+      <div class="synth-bridge">"The pattern that works is..."</div>
+      <div class="synth-body">Every engagement that works starts with a single, bounded, high-frequency problem. Not ten things — one. Solve it completely. Ship it. Get S&C seeing the benefit. Then the second conversation happens naturally. The organisations that try to boil the ocean first are still in discovery a year later.</div>
+      <div class="synth-earned"><strong>Only deploy if:</strong> the conversation is expanding into too many use cases at once, or someone is asking how all three problems get solved simultaneously.</div>
+      <button class="deploy-btn" onclick="toggleDeployed('sc6',this)">Mark as deployed</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="beat-divider"></div>
+
+<!-- ══ BEAT 4: SHOW ══ -->
+<div class="beat" id="beat-4">
+  <div class="beat-header">
+    <div class="beat-badge">
+      <div class="beat-badge-n">04</div>
+      <div class="beat-badge-label">Show</div>
+    </div>
+    <div class="beat-meta">
+      <div class="beat-title">Something tangible. Specific to what they just told you.</div>
+      <div class="beat-sub">The demo makes the synthesis real. Don't show everything — show the thing that maps to the problem they most care about. Bolaji leads with the indicative demo. The goal is a reaction, not a presentation.</div>
+      <div class="beat-timing">15–20 min · Bolaji leads · Make it specific · Watch for the reaction</div>
+    </div>
+  </div>
+
+  <div class="show-grid">
+    <div class="show-card primary">
+      <div class="show-label">Primary · Lead with this</div>
+      <div class="show-title">Indicative Demo — Quote-to-Contract AI</div>
+      <div class="show-body">Built specifically for S&C. Shows three real inbound documents — a Duke Energy RFQ, a NextEra data centre spec, an Dominion PO. AI has already read all three, extracted key fields, checked against commercial standards, and flagged issues. Joseph can see exactly what the Salesforce integration looks like.</div>
+      <a href="snc-demo.html" target="_blank" class="show-action-btn primary">Open Demo →</a>
+      <div class="talking-points">
+        <div class="tp-label">Talking points by document</div>
+        <div class="tp-item"><strong>Duke Energy RFQ:</strong> 34 pages → extracted in &lt;90 seconds. LD clause at 0.5%/week flagged immediately — double S&C's standard. Show the source citation link.</div>
+        <div class="tp-item"><strong>NextEra Energy spec:</strong> 58 pages, data centre campus, 480MW. Three flags: 1%/week LD (4× standard), 63kA non-standard rating, DNP3 SCADA scope. This is their world — AI data centre infrastructure.</div>
+        <div class="tp-item"><strong>Dominion PO:</strong> Clean. No flags. Clear to process. Shows the system knows the difference — not everything is a problem.</div>
+        <div class="tp-item"><strong>Ask AI tab:</strong> Let Joseph or Ernst type a question. "Which documents have non-standard LD clauses?" Real answer, live. That's the moment.</div>
+      </div>
+    </div>
+
+    <div class="show-card">
+      <div class="show-label">If ETO configurator dominates</div>
+      <div class="show-title">Analogous prior work — manufacturing design reuse</div>
+      <div class="show-body">We've done something similar for a manufacturing client (NDA limits the specifics). They received requirements and needed to match against prior designs. We built a system that surfaces the 10 most relevant prior statements of work for any new requirement — a starting point, not a solution. The real answer for S&C is validation against a preferred design universe, which is the next layer. This shows we understand the space.</div>
+      <div class="talking-points">
+        <div class="tp-label">Framing for this conversation</div>
+        <div class="tp-item">Don't oversell. The honest position: <strong>we've done adjacent work, we see the shape of the problem, and the whiteboard is the right place to get specific.</strong></div>
+        <div class="tp-item">Joseph's reframe from January is the right anchor: <em>"Validation of requirements against design — can we show the customer we meet what they're after, and check we don't miss things."</em></div>
+        <div class="tp-item">If Anders S pushes for more: "Let's bring the people closest to that process into the next session. That's where we'll be able to actually design something."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="beat-divider"></div>
+
+<!-- ══ BEAT 5: VALIDATE & CLOSE ══ -->
+<div class="beat" id="beat-5">
+  <div class="beat-header">
+    <div class="beat-badge">
+      <div class="beat-badge-n">05</div>
+      <div class="beat-badge-label">Validate</div>
+    </div>
+    <div class="beat-meta">
+      <div class="beat-title">Let them correct you. Then close to one thing.</div>
+      <div class="beat-sub">Read back what you understood. Their corrections are the signal — they tell you what to fix in the pre-proposal. Then one next step: one action, one owner, one date, agreed before anyone closes a laptop.</div>
+      <div class="beat-timing">10–15 min · They correct · One step agreed before the call ends</div>
+    </div>
+  </div>
+
+  <div class="validate-grid">
+    <div class="panel">
+      <div class="vp-head">
+        <div class="vp-head-title">Validation — read these back, one by one</div>
+        <div class="vp-head-sub">Click confirmed ✓ or corrected ! — their response tells you what to fix in the pre-proposal</div>
+      </div>
+      <div class="vp-checks">
+        <div class="vp-check-item" onclick="cycleCheck(this)">
+          <div class="vp-check-box"></div>
+          <div class="vp-check-text">"We understand the primary challenge to be [their words on the quote-to-contract process]. Is that right?"</div>
+        </div>
+        <div class="vp-check-item" onclick="cycleCheck(this)">
+          <div class="vp-check-box"></div>
+          <div class="vp-check-text">"The use case we think has the clearest fit is [quote-to-contract or ETO — whichever emerged]. Does that match your instinct?"</div>
+        </div>
+        <div class="vp-check-item" onclick="cycleCheck(this)">
+          <div class="vp-check-box"></div>
+          <div class="vp-check-text">"The constraint that matters most is [their words — speed, integration, people, budget]. Have we got that right?"</div>
+        </div>
+        <div class="vp-check-item" onclick="cycleCheck(this)">
+          <div class="vp-check-box"></div>
+          <div class="vp-check-text">"You said six months from now success would look like [their Q6 answer]. That's what we're building to."</div>
+        </div>
+        <div class="vp-check-item" onclick="cycleCheck(this)">
+          <div class="vp-check-box"></div>
+          <div class="vp-check-text">"Is there anything we've misunderstood, or anything important we haven't touched on today?"</div>
+        </div>
+      </div>
+      <div class="vp-examples">
+        <div class="vp-ex-label">Corrections that changed everything — from other sessions</div>
+        <div class="vp-ex-item">LoganAir: <em>"The real-time resolution isn't useful for us. The seven-day forward view is."</em> Entire scope shifted.</div>
+        <div class="vp-ex-item">Goodman: <em>"The biggest pain is chasing vendors, not the workflow itself."</em> Stated problem wasn't the real one.</div>
+        <div class="vp-ex-item">Lingotto: <em>"That compliance workflow doesn't exist yet — it needs to be built net-new."</em> Changed from automation to new-build.</div>
+      </div>
+    </div>
+
+    <div class="close-panel">
+      <div class="one-step">
+        <div class="one-step-label">The one next step</div>
+        <div class="one-step-title">One action. One owner. One date. Agreed before anyone closes a laptop.</div>
+        <div class="osf-row">
+          <div class="osf-label">The action</div>
+          <input class="osf-input" type="text" placeholder="e.g. Conquer sends pre-proposal for quote-to-contract use case">
+        </div>
+        <div class="osf-row">
+          <div class="osf-label">Owner</div>
+          <input class="osf-input" type="text" placeholder="Named person — David / Joseph">
+        </div>
+        <div class="osf-row">
+          <div class="osf-label">Date</div>
+          <input class="osf-input" type="text" placeholder="Specific date — e.g. Fri 11 April">
+        </div>
+      </div>
+
+      <div class="rule-box">
+        <div class="rule-box-title">The close rule</div>
+        <div class="rule-box-body">Don't leave the call without a <em>specific date</em> in both diaries. "We'll be in touch" is not a next step. "Pre-proposal by Friday the 11th, Joseph reviews by the 18th" is a next step. If they're not ready to commit to a date — find out why before the call ends.</div>
+      </div>
+
+      <div class="commit-strip">
+        <div class="commit-title">If cost or risk comes up here</div>
+        <div class="commit-body">Discovery at our risk. The pre-proposal is free. Phase 1 lives in our cloud — you don't need to provision anything. You see working software before you pay for anything. First engagement — no upfront cost.</div>
+      </div>
+
+      <div class="rule-box" style="border-color:rgba(255,160,48,0.25); background:var(--amber-bg);">
+        <div class="rule-box-title" style="color:var(--amber);">If ETO configurator tries to become the whole conversation</div>
+        <div class="rule-box-body">"That's a conversation we want to have properly — with the people closest to that process. Let's make that the second session, once we've shipped something on the commercial side and you know we can do what we say." Don't close on something you can't scope.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- ══ ROOM MODE ══ -->
+<div id="roomMode">
+  <div class="room-topbar">
+    <div class="room-topbar-left">
+      <div class="room-logo-dot"></div>
+      <div class="room-topbar-divider"></div>
+      <span style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.25);font-family:'Geist Mono',monospace;">In Session</span>
+      <div class="room-topbar-divider"></div>
+      <span class="room-client-name">S&amp;C Electric</span>
+    </div>
+    <div class="room-topbar-right">
+      <div class="room-timer" id="roomTimer">00:00</div>
+      <button class="room-timer-btn" id="roomStartBtn" onclick="roomTimerToggle()">START</button>
+      <button class="room-timer-btn" onclick="roomTimerReset()">RESET</button>
+      <div class="room-topbar-divider"></div>
+      <button class="room-exit-btn" onclick="exitRoomMode()">← Prep</button>
+    </div>
+  </div>
+
+  <div class="room-body">
+    <div class="room-col">
+      <div class="room-col-label">Probe questions — click to mark asked</div>
+      <div class="room-q" onclick="this.classList.toggle('asked')">
+        <div class="room-q-num">01</div>
+        <div>
+          <div class="room-q-text">Walk me through what happens from the moment a customer sends in a spec. Who touches it, where does it go, where does it fall down?</div>
+          <div class="room-q-sub">→ Listen for a specific person's name and the moment of manual work</div>
+        </div>
+      </div>
+      <div class="room-q" onclick="this.classList.toggle('asked')">
+        <div class="room-q-num">02</div>
+        <div>
+          <div class="room-q-text">When a customer sends non-standard terms — how does that get caught? Who catches it?</div>
+          <div class="room-q-sub">→ "Usually someone catches it" = the gap. "After we've quoted" = the fire.</div>
+        </div>
+      </div>
+      <div class="room-q" onclick="this.classList.toggle('asked')">
+        <div class="room-q-num">03</div>
+        <div>
+          <div class="room-q-text">Two engineers, same spec, two different designs — is there a documented preferred universe, or is it tribal knowledge?</div>
+          <div class="room-q-sub">→ "Lives in people's heads" changes the scope entirely</div>
+        </div>
+      </div>
+      <div class="room-q" onclick="this.classList.toggle('asked')">
+        <div class="room-q-num">04</div>
+        <div>
+          <div class="room-q-text">When BOM/inventory errors surface — give me a concrete example of the last time it burned you. What was the upstream cause?</div>
+          <div class="room-q-sub">→ Real examples reveal the actual problem, not the stated one</div>
+        </div>
+      </div>
+      <div class="room-q" onclick="this.classList.toggle('asked')">
+        <div class="room-q-num">05</div>
+        <div>
+          <div class="room-q-text">Beyond Salesforce and M365 — what's the tech landscape around the commercial process? Has AI been tried on any of this?</div>
+          <div class="room-q-sub">→ Ernst will engage most here. "Copilot but nobody uses it for this" = buying signal.</div>
+        </div>
+      </div>
+      <div class="room-q" onclick="this.classList.toggle('asked')">
+        <div class="room-q-num">06</div>
+        <div>
+          <div class="room-q-text">What would have to be true for you to say, six months from now, that this was the best decision you made this year?</div>
+          <div class="room-q-sub">→ Sets success criteria in their words. Use this to close Beat 5.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="room-col">
+      <div class="room-right-inner">
+        <div>
+          <div class="room-section-label">Live signal tagging</div>
+          <div class="room-signal-chips">
+            <div class="room-signal-chip" onclick="this.classList.toggle('tagged')"><span style="width:5px;height:5px;border-radius:50%;background:var(--text-dim);flex-shrink:0;"></span>Humans between customer ask and PO</div>
+            <div class="room-signal-chip" onclick="this.classList.toggle('tagged')"><span style="width:5px;height:5px;border-radius:50%;background:var(--text-dim);flex-shrink:0;"></span>T&amp;C / LD issue caught too late</div>
+            <div class="room-signal-chip" onclick="this.classList.toggle('tagged')"><span style="width:5px;height:5px;border-radius:50%;background:var(--text-dim);flex-shrink:0;"></span>ETO — same spec → different outputs</div>
+            <div class="room-signal-chip" onclick="this.classList.toggle('tagged')"><span style="width:5px;height:5px;border-radius:50%;background:var(--text-dim);flex-shrink:0;"></span>BOM/inventory upstream language cause</div>
+            <div class="room-signal-chip" onclick="this.classList.toggle('tagged')"><span style="width:5px;height:5px;border-radius:50%;background:var(--text-dim);flex-shrink:0;"></span>Salesforce as pain not solution</div>
+            <div class="room-signal-chip" onclick="this.classList.toggle('tagged')"><span style="width:5px;height:5px;border-radius:50%;background:var(--text-dim);flex-shrink:0;"></span>Data centre / switchgear demand urgency</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="room-section-label">Demo</div>
+          <a href="snc-demo.html" target="_blank" class="room-demo-btn">Open S&amp;C Demo →</a>
+        </div>
+
+        <div>
+          <div class="room-section-label">One next step</div>
+          <div class="room-field-label">Action</div>
+          <input class="room-field-input" type="text" placeholder="e.g. Pre-proposal for quote-to-contract">
+          <div class="room-field-label">Owner</div>
+          <input class="room-field-input" type="text" placeholder="Named person">
+          <div class="room-field-label">Date</div>
+          <input class="room-field-input" type="text" placeholder="Specific date">
+        </div>
+
+        <div style="font-size:11px;color:var(--text-dim);line-height:1.6;padding-top:10px;border-top:1px solid var(--border);">
+          <strong style="color:var(--amber);">If cost comes up:</strong> "Discovery at our risk. Pre-proposal is free. You see working software before you pay for anything."<br><br>
+          <strong style="color:var(--amber);">If ETO takes over:</strong> "Let's make that the second session — with the right people. First, let's ship something on the commercial side."
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── BEAT NAV ──
+const beats = ['beat-1','beat-2','beat-3','beat-4','beat-5'];
+const btns  = document.querySelectorAll('.beat-btn');
+
+function setActiveBeat(id) {
+  btns.forEach(b => b.classList.toggle('active', b.getAttribute('href') === '#' + id));
+}
+
+const obs = new IntersectionObserver((entries) => {
+  let best = null;
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      if (!best || e.intersectionRatio > best.intersectionRatio) best = e;
+    }
+  });
+  if (best) setActiveBeat(best.target.id);
+}, { threshold:[0,0.1,0.25,0.5], rootMargin:'-52px 0px -30% 0px' });
+
+beats.forEach(id => { const el = document.getElementById(id); if(el) obs.observe(el); });
+btns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const href = btn.getAttribute('href');
+    if (href) setActiveBeat(href.replace('#',''));
+  });
+});
+
+// ── SCROLL PROGRESS ──
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('progressFill').style.width = Math.min(pct,100) + '%';
+});
+
+// ── TIMER ──
+let timerInterval = null, timerSeconds = 0, timerRunning = false;
+const display  = document.getElementById('timerDisplay');
+const startBtn = document.getElementById('timerStartBtn');
+
+function formatTime(s) {
+  const m = Math.floor(s/60), sec = s%60;
+  return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+}
+function updateDisplay() {
+  display.textContent = formatTime(timerSeconds);
+  display.className = 'timer-display';
+  if (timerSeconds > 5400) display.classList.add('over');
+  else if (timerSeconds > 4500) display.classList.add('warning');
+}
+startBtn.addEventListener('click', () => {
+  timerRunning = !timerRunning;
+  startBtn.textContent = timerRunning ? 'PAUSE' : 'START';
+  if (timerRunning) {
+    timerInterval = setInterval(() => { timerSeconds++; updateDisplay(); }, 1000);
+  } else {
+    clearInterval(timerInterval);
+  }
+});
+document.getElementById('timerResetBtn').addEventListener('click', () => {
+  clearInterval(timerInterval); timerRunning = false;
+  timerSeconds = 0; updateDisplay(); startBtn.textContent = 'START';
+});
+
+// ── PROBE CARDS ──
+function toggleAsked(id, btn) {
+  const card = document.getElementById(id);
+  card.classList.toggle('asked');
+  btn.textContent = card.classList.contains('asked') ? 'Asked ✓' : 'Mark as asked';
+}
+
+// ── SYNTH CARDS ──
+function toggleDeployed(id, btn) {
+  const card = document.getElementById(id);
+  card.classList.toggle('deployed');
+  btn.textContent = card.classList.contains('deployed') ? 'Deployed ✓' : 'Mark as deployed';
+}
+
+// ── VALIDATE CHECKS ──
+function cycleCheck(item) {
+  if (item.classList.contains('confirmed')) {
+    item.classList.remove('confirmed');
+    item.classList.add('corrected');
+    item.querySelector('.vp-check-box').textContent = '!';
+  } else if (item.classList.contains('corrected')) {
+    item.classList.remove('corrected');
+    item.querySelector('.vp-check-box').textContent = '';
+  } else {
+    item.classList.add('confirmed');
+    item.querySelector('.vp-check-box').textContent = '✓';
+  }
+}
+
+// ── TASHDE ──
+function markFilled(id, textarea) {
+  const card = document.getElementById(id);
+  if (textarea.value.trim().length > 0) card.classList.add('filled');
+  else card.classList.remove('filled');
+}
+
+// ── SPECIFICITY CHECKPOINT ──
+let specChecked = [false,false,false,false,false];
+function toggleSpec(item, idx) {
+  specChecked[idx] = !specChecked[idx];
+  item.classList.toggle('done', specChecked[idx]);
+  item.querySelector('.spec-q-check').textContent = specChecked[idx] ? '✓' : '○';
+  const count = specChecked.filter(Boolean).length;
+  for (let i=0; i<5; i++) {
+    document.getElementById('sb'+(i+1)).classList.toggle('filled', i < count);
+  }
+  const statusEl = document.getElementById('specStatus');
+  const redirectEl = document.getElementById('specRedirect');
+  if (count === 5) { statusEl.textContent = 'Ready to price'; statusEl.className = 'spec-status high'; redirectEl.classList.remove('show'); }
+  else if (count >= 3) { statusEl.textContent = 'Getting there'; statusEl.className = 'spec-status mid'; redirectEl.classList.add('show'); }
+  else { statusEl.textContent = 'Not ready'; statusEl.className = 'spec-status low'; redirectEl.classList.add('show'); }
+}
+
+// ── ROOM MODE ──
+let roomTimerSeconds = 0, roomTimerRunning = false, roomTimerInterval = null;
+
+function enterRoomMode() {
+  document.getElementById('roomMode').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  if (!roomTimerRunning) roomTimerToggle();
+}
+function exitRoomMode() {
+  document.getElementById('roomMode').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function roomTimerToggle() {
+  roomTimerRunning = !roomTimerRunning;
+  document.getElementById('roomStartBtn').textContent = roomTimerRunning ? 'PAUSE' : 'START';
+  if (roomTimerRunning) {
+    roomTimerInterval = setInterval(() => { roomTimerSeconds++; updateRoomTimer(); }, 1000);
+  } else {
+    clearInterval(roomTimerInterval);
+  }
+}
+function roomTimerReset() {
+  clearInterval(roomTimerInterval);
+  roomTimerRunning = false;
+  roomTimerSeconds = 0;
+  document.getElementById('roomStartBtn').textContent = 'START';
+  updateRoomTimer();
+}
+function updateRoomTimer() {
+  const m = Math.floor(roomTimerSeconds/60), s = roomTimerSeconds%60;
+  const el = document.getElementById('roomTimer');
+  el.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  el.className = 'room-timer';
+  if (roomTimerSeconds > 5400) el.classList.add('over');
+  else if (roomTimerSeconds > 4500) el.classList.add('warning');
+}
+</script>
+</body>
+</html>
