@@ -1014,23 +1014,85 @@ function Pipeline() {
   );
 }
 
+const ROLE_QUESTIONS = {
+  'Commercial VP': [
+    'Which open opportunities have non-standard LD clauses?',
+    'What is the total value of flagged deals that can\'t move forward today?',
+    'Draft a summary of today\'s pipeline for the leadership meeting',
+    'Which opportunity represents the biggest commercial risk right now?',
+  ],
+  'Sales Manager': [
+    'Summarise the Duke Energy RFQ — what do I need to know before responding?',
+    'Which documents are clear to process with no flags?',
+    'What\'s blocking the NextEra Energy opportunity?',
+    'Which deals are closest to quote stage?',
+  ],
+  'Commercial Lawyer': [
+    'List all documents with non-standard liquidated damages clauses',
+    'What are the governing law terms across today\'s inbound documents?',
+    'Which LD clause deviates most from S&C\'s standard?',
+    'Draft a response to Duke Energy flagging the LD clause issue',
+  ],
+  'Engineering': [
+    'Which inbound specs contain non-standard technical requirements?',
+    'Is the 63kA fault rating in the NextEra spec within our standard range?',
+    'What SCADA protocols have been specified across today\'s documents?',
+    'Which documents require an engineering review before quoting?',
+  ],
+};
+
+const DATA_SOURCES = [
+  { icon:'📥', label:'Document Inbox', desc:'3 documents received today, all AI-reviewed' },
+  { icon:'📋', label:'Extraction Engine', desc:'127 fields extracted across today\'s documents' },
+  { icon:'⚖️', label:'Commercial Baseline', desc:'S&C standard T&C terms and thresholds' },
+  { icon:'⚡', label:'Technical Config DB', desc:'S&C preferred product configurations and ratings' },
+  { icon:'📊', label:'Pipeline State', desc:'9 active opportunities, $14.4M total value' },
+];
+
 function AskAI() {
   const [messages, setMessages] = useState([
-    { role:'ai', text:"I have access to all inbound documents, extracted data, and commercial flags across the current pipeline. Ask me about any document, flag, or trend you're seeing.", sources:[] }
+    {
+      role:'ai',
+      text:"I've reviewed all three documents that arrived today and I have the full pipeline in view. The most urgent issue: NextEra Energy's data centre spec has a 1%/week LD clause — double S&C's standard — and a 63kA fault rating that's outside your standard product range. Both need resolution before anyone responds. What would you like to dig into?",
+      sources:['Document Inbox','Commercial Baseline']
+    }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
+  const [activeRole, setActiveRole] = useState('Commercial VP');
   const messagesEndRef = useRef(null);
 
-  const CHIPS = [
-    'Summarise today\'s incoming documents',
-    'Which documents have non-standard LD clauses?',
-    'What technical flags are outstanding?',
-    'What\'s the highest value opportunity in the pipeline?',
-  ];
-
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior:'smooth' }); }, [messages]);
+
+  const FULL_CONTEXT = AI_SYSTEM + `
+
+Current pipeline context (live data):
+INBOUND DOCUMENTS TODAY:
+1. Duke Energy Corp — RFQ, 15kV Metal-Clad Switchgear x12 units, ~$2.4M
+   - Extracted: 10 fields, delivery 16 weeks ARO, payment Net 60
+   - Flags: LD clause 0.5%/week cap 10% (S&C standard: 0.25%/week cap 5%) — CRITICAL. Delivery timeline tight — WARNING.
+   - Tech spec: 15kV/1200A/40kA — matches S&C preferred configuration.
+
+2. NextEra Energy — Technical Specification, 38kV Outdoor Switchgear x8 bays, 480MW data centre campus, ~$4.1M
+   - Extracted: 10 fields, delivery 20 weeks ARO, 30% advance + 70% on delivery
+   - Flags: LD clause 1%/week cap 15% — CRITICAL (2x above standard). 63kA fault rating — CRITICAL (outside standard range, engineering review required). DNP3 SCADA integration — WARNING (adds scope and cost).
+   - This is the highest-value and highest-risk document today.
+
+3. Dominion Energy — Purchase Order, Form 4 Recloser x24, $1.02M
+   - Extracted: 8 fields. All terms standard. Net 45 payment.
+   - Flags: None. Clear to process.
+
+PIPELINE STATE:
+- 9 active opportunities, $14.4M total value
+- 5 flagged ($10.4M value), 2 clear, 2 won this week ($2.4M)
+- Stages: Incoming (3), Under Review (2), Commercial Sign-off (1), Quote Issued (2)
+- Blocked: Pacific Gas & Electric (non-standard arc flash rating), AEP Texas (awaiting VP approval on revised LD terms)
+
+WHAT THE AI DOES vs HUMANS:
+- AI: reads documents, extracts fields, checks against commercial baseline, raises flags, populates Salesforce, answers questions
+- Humans: make all commercial decisions, approve or reject terms, sign off quotes, manage customer relationships
+The AI never responds to customers or commits S&C to any terms.`;
 
   async function send(text) {
     if (!text?.trim() || loading) return;
@@ -1048,14 +1110,22 @@ function AskAI() {
         body: JSON.stringify({
           model:'claude-sonnet-4-20250514',
           max_tokens:1000,
-          system: AI_SYSTEM + `\n\nCurrent pipeline context:\n- 3 inbound documents today\n- Duke Energy: 15kV switchgear x12, 2 flags (non-standard LD at 0.5%/week, tight 16-week delivery)\n- NextEra Energy: 38kV outdoor switchgear x8 bays for data centre, 3 flags (1%/week LD, 63kA non-standard, DNP3 SCADA)\n- Dominion Energy: Recloser x24, PO accepted, clear\n- Pipeline: 9 active opportunities, 5 flagged, 2 won this week`,
+          system: FULL_CONTEXT,
           messages: newHistory
         })
       });
       const data = await res.json();
       const reply = data.content?.find(b=>b.type==='text')?.text || "I'm having trouble connecting right now.";
       setHistory(h => [...h, { role:'assistant', content:reply }]);
-      setMessages(m => [...m, { role:'ai', text:reply, sources:['Document Inbox','Extraction Engine','Commercial Baseline'] }]);
+      // Vary sources based on question content
+      const src = text.toLowerCase().includes('ld') || text.toLowerCase().includes('clause') || text.toLowerCase().includes('terms')
+        ? ['Commercial Baseline','Document Inbox']
+        : text.toLowerCase().includes('tech') || text.toLowerCase().includes('spec') || text.toLowerCase().includes('kv') || text.toLowerCase().includes('rating')
+        ? ['Technical Config DB','Document Inbox']
+        : text.toLowerCase().includes('pipeline') || text.toLowerCase().includes('value') || text.toLowerCase().includes('block')
+        ? ['Pipeline State','Document Inbox']
+        : ['Document Inbox','Extraction Engine'];
+      setMessages(m => [...m, { role:'ai', text:reply, sources:src }]);
     } catch {
       setMessages(m => [...m, { role:'ai', text:"Connection issue — please try again.", sources:[] }]);
     }
@@ -1064,25 +1134,102 @@ function AskAI() {
 
   return (
     <div className="page" style={{paddingBottom:0}}>
-      <div className="chat-wrap">
+      <div style={{display:'grid', gridTemplateColumns:'300px 1fr', gap:20, height:'calc(100vh - 120px)'}}>
+
+        {/* LEFT — context panel */}
+        <div style={{display:'flex',flexDirection:'column',gap:14,overflowY:'auto'}}>
+
+          {/* What this is */}
+          <div style={{background:'white',border:'1px solid var(--border)',borderRadius:'var(--radius)',padding:'18px 20px',boxShadow:'var(--shadow-sm)'}}>
+            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
+              <div style={{width:32,height:32,borderRadius:10,background:'var(--brand)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="white"><path d="M10 2L2 7v6l8 5 8-5V7L10 2z"/></svg>
+              </div>
+              <div>
+                <div style={{fontSize:13,fontWeight:700,color:'var(--text)'}}>Commercial Intelligence</div>
+                <div style={{fontSize:11,color:'var(--green)',fontWeight:600,display:'flex',alignItems:'center',gap:4}}>
+                  <span style={{width:5,height:5,borderRadius:'50%',background:'var(--green)',display:'inline-block',animation:'pulse 2s infinite'}}/>
+                  Live · Connected to pipeline
+                </div>
+              </div>
+            </div>
+            <p style={{fontSize:12,color:'var(--text-secondary)',lineHeight:1.65}}>
+              Ask anything about today's documents, outstanding flags, pipeline value, or specific commercial terms. The AI has read every document and has the full pipeline in view.
+            </p>
+            <div style={{marginTop:10,padding:'8px 12px',background:'var(--amber-bg)',borderRadius:'var(--radius-sm)',fontSize:11,color:'var(--text-secondary)',lineHeight:1.5}}>
+              <strong style={{color:'var(--amber)'}}>Human decisions only:</strong> The AI surfaces information and drafts text. It never responds to customers or commits to commercial terms.
+            </div>
+          </div>
+
+          {/* Data sources */}
+          <div style={{background:'white',border:'1px solid var(--border)',borderRadius:'var(--radius)',padding:'18px 20px',boxShadow:'var(--shadow-sm)'}}>
+            <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.07em',color:'var(--text-muted)',marginBottom:12}}>Connected data sources</div>
+            {DATA_SOURCES.map((s,i) => (
+              <div key={i} style={{display:'flex',gap:10,alignItems:'flex-start',padding:'7px 0',borderBottom:i<DATA_SOURCES.length-1?'1px solid var(--border)':'none'}}>
+                <span style={{fontSize:15,flexShrink:0,marginTop:1}}>{s.icon}</span>
+                <div>
+                  <div style={{fontSize:12,fontWeight:600,color:'var(--text)'}}>{s.label}</div>
+                  <div style={{fontSize:11,color:'var(--text-muted)',lineHeight:1.4}}>{s.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Role-based questions */}
+          <div style={{background:'white',border:'1px solid var(--border)',borderRadius:'var(--radius)',padding:'18px 20px',boxShadow:'var(--shadow-sm)',flex:1}}>
+            <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.07em',color:'var(--text-muted)',marginBottom:10}}>Questions by role</div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:5,marginBottom:12}}>
+              {Object.keys(ROLE_QUESTIONS).map(role => (
+                <button key={role} onClick={()=>setActiveRole(role)} style={{
+                  padding:'4px 10px',borderRadius:20,border:'1px solid var(--border)',
+                  fontSize:11,fontWeight:activeRole===role?700:500,cursor:'pointer',
+                  background:activeRole===role?'var(--text)':'white',
+                  color:activeRole===role?'white':'var(--text-secondary)',
+                  fontFamily:'var(--font)',transition:'all 0.15s'
+                }}>{role}</button>
+              ))}
+            </div>
+            {ROLE_QUESTIONS[activeRole].map((q,i) => (
+              <button key={i} onClick={()=>send(q)} style={{
+                display:'block',width:'100%',textAlign:'left',padding:'8px 10px',
+                marginBottom:5,background:'#F9FAFB',border:'1px solid var(--border)',
+                borderRadius:'var(--radius-sm)',fontSize:12,color:'var(--text-secondary)',
+                cursor:'pointer',fontFamily:'var(--font)',lineHeight:1.5,transition:'all 0.15s'
+              }}
+              onMouseOver={e=>{e.currentTarget.style.borderColor='var(--brand)';e.currentTarget.style.color='var(--brand)';e.currentTarget.style.background='var(--brand-light)';}}
+              onMouseOut={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.color='var(--text-secondary)';e.currentTarget.style.background='#F9FAFB';}}
+              >
+                {q}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT — chat */}
         <div className="chat-panel">
           <div className="chat-header">
             <div className="chat-avatar">
               <svg viewBox="0 0 20 20"><path d="M10 2L2 7v6l8 5 8-5V7L10 2z"/></svg>
             </div>
-            <div>
-              <div className="chat-name">S&amp;C Commercial AI</div>
-              <div className="chat-status">Connected to pipeline</div>
+            <div style={{flex:1}}>
+              <div className="chat-name">Commercial Intelligence Agent</div>
+              <div className="chat-status">Reviewed 3 documents · $14.4M pipeline in view</div>
+            </div>
+            <div style={{fontSize:11,color:'var(--text-muted)',textAlign:'right',lineHeight:1.4}}>
+              <div style={{fontWeight:600,color:'var(--red)'}}>5 flags open</div>
+              <div>$10.4M blocked</div>
             </div>
           </div>
+
           <div className="messages">
             {messages.map((m,i) => (
-              <div key={i} className={`msg ${m.role}`} style={{maxWidth:m.role==='user'?'70%':'85%'}}>
+              <div key={i} className={`msg ${m.role}`} style={{maxWidth:m.role==='user'?'72%':'88%'}}>
                 <div className="msg-av">{m.role==='ai'?'AI':'You'}</div>
-                <div>
-                  <div className={`msg-bubble${m.text.includes('…')?' thinking':''}`}>{m.text}</div>
+                <div style={{flex:1}}>
+                  <div className={`msg-bubble${m.text.includes('…')?' thinking':''}`} style={{whiteSpace:'pre-wrap'}}>{m.text}</div>
                   {m.sources?.length>0 && (
                     <div className="sources">
+                      <span style={{fontSize:10,color:'var(--text-muted)',marginRight:4}}>Sources:</span>
                       {m.sources.map((s,j) => <span key={j} className="source-chip">{s}</span>)}
                     </div>
                   )}
@@ -1090,32 +1237,32 @@ function AskAI() {
               </div>
             ))}
             {loading && (
-              <div className="msg ai">
+              <div className="msg ai" style={{maxWidth:'88%'}}>
                 <div className="msg-av">AI</div>
-                <div className="msg-bubble thinking">Reviewing pipeline data…</div>
+                <div style={{display:'flex',alignItems:'center',gap:8,padding:'10px 14px',background:'#F3F4F6',borderRadius:12,fontSize:14,color:'var(--text-muted)',fontStyle:'italic'}}>
+                  <div style={{width:14,height:14,border:'2px solid var(--text-muted)',borderTopColor:'transparent',borderRadius:'50%',animation:'spin 0.8s linear infinite',flexShrink:0}}/>
+                  Reading pipeline data…
+                </div>
               </div>
             )}
             <div ref={messagesEndRef}/>
           </div>
-          <div className="chips">
-            {CHIPS.map((c,i) => (
-              <button key={i} className="chip" onClick={()=>send(c)}>{c}</button>
-            ))}
-          </div>
+
           <div className="chat-input-row">
             <input
               className="chat-input"
               value={input}
               onChange={e=>setInput(e.target.value)}
               onKeyPress={e=>e.key==='Enter'&&send(input)}
-              placeholder="Ask about any document, flag, or pipeline question…"
+              placeholder="Ask about documents, flags, pipeline value, or draft a response…"
               disabled={loading}
             />
             <button className="send-btn" onClick={()=>send(input)} disabled={loading||!input.trim()}>
-              {loading ? '…' : 'Send'}
+              {loading ? '…' : 'Send →'}
             </button>
           </div>
         </div>
+
       </div>
     </div>
   );
