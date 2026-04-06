@@ -851,39 +851,164 @@ function Inbox() {
   );
 }
 
+const PIPELINE_RICH = {
+  'Incoming': {
+    desc: 'AI review complete — awaiting commercial team',
+    color: 'var(--brand)',
+    aiRole: 'Extracted & flagged automatically on receipt',
+    cards: [
+      { company:'Duke Energy Corp', desc:'15kV Metal-Clad Switchgear × 12', value:'~$2.4M', flag:'critical', flagLabel:'2 Critical Flags', blocker:'Non-standard LD clause — legal review required before responding', age:'Today, 9:14 AM' },
+      { company:'NextEra Energy', desc:'38kV Outdoor Switchgear × 8 bays — Data Centre', value:'~$4.1M', flag:'critical', flagLabel:'3 Flags', blocker:'LD clause + 63kA non-standard rating — engineering + legal needed', age:'Today, 8:02 AM' },
+      { company:'Evergy Inc', desc:'Distribution Recloser RFQ × 36', value:'~$890K', flag:'warn', flagLabel:'1 Warning', blocker:'Delivery timeline needs production capacity check', age:'2h ago' },
+    ]
+  },
+  'Under Review': {
+    desc: 'Flags reviewed — commercial team assessing',
+    color: 'var(--amber)',
+    aiRole: 'AI flagged issues now being resolved by commercial team',
+    cards: [
+      { company:'Pacific Gas & Electric', desc:'25kV Switchgear — Wildfire Hardening', value:'~$3.2M', flag:'warn', flagLabel:'In Review', blocker:'Spec includes non-standard arc flash rating — under assessment', age:'1 day' },
+      { company:'Xcel Energy', desc:'15kV Switchgear × 8 bays', value:'~$1.6M', flag:'clear', flagLabel:'Clear', blocker:null, age:'2 days' },
+    ]
+  },
+  'Commercial Sign-off': {
+    desc: 'Pending approval before quote issues',
+    color: 'var(--purple)',
+    aiRole: 'AI summary and flag report included in sign-off pack',
+    cards: [
+      { company:'AEP Texas', desc:'138kV Disconnect Switch', value:'~$780K', flag:'warn', flagLabel:'Awaiting Sign-off', blocker:'Revised LD terms negotiated — awaiting VP Commercial approval', age:'3 days' },
+    ]
+  },
+  'Quote Issued': {
+    desc: 'Quote sent — awaiting customer response',
+    color: 'var(--green)',
+    aiRole: 'All extracted data logged to Salesforce automatically',
+    cards: [
+      { company:'Dominion Energy', desc:'Form 4 Recloser × 24', value:'$1.02M', flag:'clear', flagLabel:'Accepted', blocker:null, age:'4 days' },
+      { company:'Con Edison', desc:'15kV Switchgear Retrofit × 6', value:'$1.4M', flag:'clear', flagLabel:'Won ✓', blocker:null, age:'1 week' },
+    ]
+  },
+};
+
 function Pipeline() {
+  const [expanded, setExpanded] = useState(null);
+
+  const totalValue = '$14.4M';
+  const flaggedValue = '$10.4M';
+  const atRiskCount = 5;
+
   return (
     <div className="page">
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
-        <div>
-          <div style={{fontSize:20,fontWeight:800,letterSpacing:-0.5}}>Quote Pipeline</div>
-          <div style={{fontSize:13,color:'var(--text-muted)',marginTop:3}}>All inbound commercial documents · updated in real time</div>
-        </div>
-        <div style={{display:'flex',gap:24,fontSize:13}}>
-          <div><span style={{fontWeight:700,fontSize:20,color:'var(--brand)'}}>9</span> <span style={{color:'var(--text-muted)'}}>Active</span></div>
-          <div><span style={{fontWeight:700,fontSize:20,color:'var(--red)'}}>5</span> <span style={{color:'var(--text-muted)'}}>Flagged</span></div>
-          <div><span style={{fontWeight:700,fontSize:20,color:'var(--green)'}}>2</span> <span style={{color:'var(--text-muted)'}}>Won this week</span></div>
-        </div>
+
+      {/* Header */}
+      <div style={{marginBottom:24}}>
+        <div style={{fontSize:22,fontWeight:800,letterSpacing:-0.5,marginBottom:4}}>Commercial Pipeline</div>
+        <div style={{fontSize:13,color:'var(--text-muted)'}}>Every inbound opportunity — AI-reviewed, flagged, and tracked from receipt to quote</div>
       </div>
-      <div className="pipeline-grid">
-        {Object.entries(PIPELINE_DATA).map(([stage, cards]) => (
-          <div key={stage} className="pipeline-col">
-            <div className="pipeline-col-header">
-              {stage}
-              <span className="pipeline-count">{cards.length}</span>
-            </div>
-            {cards.map((card,i) => (
-              <div key={i} className="pipeline-card">
-                <div className="pipeline-card-company">{card.company}</div>
-                <div className="pipeline-card-desc">{card.desc}</div>
-                <div className="pipeline-card-meta">
-                  <span className={`pipeline-flag ${card.flag}`}>{card.flagLabel}</span>
-                  <span className="pipeline-age">{card.age}</span>
-                </div>
-              </div>
-            ))}
+
+      {/* Leadership stat strip */}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:24}}>
+        {[
+          { label:'Total pipeline value', val:totalValue, sub:'9 active opportunities', color:'var(--text)', bg:'white' },
+          { label:'Value with open AI flags', val:flaggedValue, sub:`${atRiskCount} opportunities need attention`, color:'var(--red)', bg:'var(--red-bg)' },
+          { label:'Avg. time to first review', val:'< 2 min', sub:'Down from ~4 hours manually', color:'var(--green)', bg:'var(--green-bg)' },
+          { label:'Won this week', val:'$2.4M', sub:'2 opportunities closed', color:'var(--purple)', bg:'var(--purple-bg)' },
+        ].map((s,i) => (
+          <div key={i} style={{background:s.bg,border:'1px solid var(--border)',borderRadius:'var(--radius)',padding:'18px 20px',boxShadow:'var(--shadow-sm)'}}>
+            <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.07em',color:'var(--text-muted)',marginBottom:6}}>{s.label}</div>
+            <div style={{fontSize:26,fontWeight:800,letterSpacing:-0.8,color:s.color,marginBottom:3}}>{s.val}</div>
+            <div style={{fontSize:12,color:'var(--text-muted)'}}>{s.sub}</div>
           </div>
         ))}
+      </div>
+
+      {/* AI role callout */}
+      <div style={{
+        display:'flex',alignItems:'center',gap:10,padding:'10px 16px',
+        background:'var(--green-bg)',border:'1px solid rgba(16,185,129,0.2)',
+        borderRadius:'var(--radius-sm)',marginBottom:20,fontSize:13,color:'var(--text-secondary)'
+      }}>
+        <span style={{fontSize:15}}>🤖</span>
+        <span><strong style={{color:'var(--green)'}}>What the AI does in this view:</strong> Every card below was created automatically when the document arrived — no manual data entry. Flags, values, and blockers were all extracted and assessed by the AI before a salesperson was involved. Your commercial team's job is to resolve the flags and make the calls.</span>
+      </div>
+
+      {/* Kanban */}
+      <div className="pipeline-grid" style={{alignItems:'start'}}>
+        {Object.entries(PIPELINE_RICH).map(([stage, col]) => (
+          <div key={stage} className="pipeline-col">
+
+            {/* Column header */}
+            <div style={{marginBottom:10}}>
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:3}}>
+                <span style={{fontSize:12,fontWeight:700,color:col.color,textTransform:'uppercase',letterSpacing:'0.05em'}}>{stage}</span>
+                <span style={{fontSize:11,fontWeight:700,background:'#F3F4F6',color:'var(--text-secondary)',padding:'2px 8px',borderRadius:20}}>{col.cards.length}</span>
+              </div>
+              <div style={{fontSize:11,color:'var(--text-muted)',lineHeight:1.4}}>{col.desc}</div>
+              <div style={{marginTop:5,fontSize:10,color:col.color,fontWeight:600,display:'flex',alignItems:'center',gap:4}}>
+                <span>🤖</span>{col.aiRole}
+              </div>
+            </div>
+
+            {/* Cards */}
+            {col.cards.map((card,i) => {
+              const key = `${stage}-${i}`;
+              const isExpanded = expanded===key;
+              return (
+                <div key={i} className="pipeline-card"
+                  onClick={()=>setExpanded(isExpanded?null:key)}
+                  style={{
+                    borderLeft: card.flag==='critical' ? '3px solid var(--red)' :
+                                card.flag==='warn' ? '3px solid var(--amber)' :
+                                '3px solid var(--green)',
+                    cursor:'pointer'
+                  }}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:4}}>
+                    <div className="pipeline-card-company" style={{flex:1,marginRight:8}}>{card.company}</div>
+                    <span style={{
+                      fontSize:12,fontWeight:800,color:
+                        card.flag==='critical'?'var(--red)':card.flag==='warn'?'var(--amber)':'var(--green)',
+                      flexShrink:0
+                    }}>{card.value}</span>
+                  </div>
+                  <div className="pipeline-card-desc">{card.desc}</div>
+
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginTop:8}}>
+                    <span className={`pipeline-flag ${card.flag==='critical'?'flag-critical':card.flag==='warn'?'flag-review':'flag-clear'}`}>
+                      {card.flagLabel}
+                    </span>
+                    <span className="pipeline-age">{card.age}</span>
+                  </div>
+
+                  {/* Expanded blocker */}
+                  {isExpanded && card.blocker && (
+                    <div style={{
+                      marginTop:10,padding:'10px 12px',
+                      background: card.flag==='critical'?'var(--red-bg)':card.flag==='warn'?'var(--amber-bg)':'var(--green-bg)',
+                      borderRadius:'var(--radius-sm)',fontSize:12,
+                      color:'var(--text-secondary)',lineHeight:1.6,
+                      borderTop:'1px solid var(--border)'
+                    }}>
+                      <div style={{fontWeight:700,marginBottom:3,color:card.flag==='critical'?'var(--red)':card.flag==='warn'?'var(--amber)':'var(--green)'}}>
+                        {card.flag==='critical'?'🚨 Blocker':card.flag==='warn'?'⚠️ Action needed':'✅ No blockers'}
+                      </div>
+                      {card.blocker}
+                    </div>
+                  )}
+                  {isExpanded && !card.blocker && (
+                    <div style={{marginTop:10,padding:'10px 12px',background:'var(--green-bg)',borderRadius:'var(--radius-sm)',fontSize:12,color:'var(--green)',fontWeight:600,borderTop:'1px solid var(--border)'}}>
+                      ✅ No flags — clear to proceed
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      {/* Footer note */}
+      <div style={{marginTop:24,padding:'14px 18px',background:'#F9FAFB',border:'1px solid var(--border)',borderRadius:'var(--radius-sm)',fontSize:12,color:'var(--text-secondary)',lineHeight:1.6}}>
+        <strong style={{color:'var(--text)'}}>For commercial leadership:</strong> This view gives you a live read on where every opportunity is, what's blocking it, and what the AI has already done. The {atRiskCount} flagged opportunities represent {flaggedValue} in pipeline value that can't move forward until someone makes a call. The AI has done the reading — your team just needs to decide.
       </div>
     </div>
   );
