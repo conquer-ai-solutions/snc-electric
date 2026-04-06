@@ -291,6 +291,377 @@ const INBOX = [
   },
 ];
 
+// ── DOCUMENT SNIPPETS ─────────────────────────────
+const DOC_SNIPPETS = {
+  // Duke Energy
+  '1:Page 1, Header': {
+    page:1, section:'Document Header',
+    lines:[
+      { text:'REQUEST FOR QUOTATION', bold:true, size:'lg' },
+      { text:' ' },
+      { text:'Issued by:', muted:true },
+      { text:'Duke Energy Corp', highlight:true, bold:true },
+      { text:'526 South Church Street, Charlotte, NC 28202' },
+      { text:'Procurement Reference: DE-2026-RFQ-04412' },
+      { text:'Date: 3 April 2026' },
+    ]
+  },
+  '1:Page 2, Section 1.1': {
+    page:2, section:'Section 1.1 — Equipment Description',
+    lines:[
+      { text:'1.1  EQUIPMENT DESCRIPTION', bold:true },
+      { text:' ' },
+      { text:'The Supplier shall design, manufacture, test, and deliver the following equipment in strict accordance with the technical specifications contained herein:' },
+      { text:' ' },
+      { text:'Equipment Type:', muted:true },
+      { text:'15kV Metal-Clad Switchgear', highlight:true, bold:true },
+      { text:'compliant with ANSI/IEEE C37.20.2 and all applicable ANSI standards. Units shall be fully factory-assembled and tested prior to shipment.' },
+    ]
+  },
+  '1:Page 2, Section 1.2': {
+    page:2, section:'Section 1.2 — Quantity',
+    lines:[
+      { text:'1.2  QUANTITY AND SCOPE', bold:true },
+      { text:' ' },
+      { text:'The Supplier shall provide a firm fixed-price quotation for the following quantity:' },
+      { text:' ' },
+      { text:'Quantity:', muted:true },
+      { text:'12 units', highlight:true, bold:true },
+      { text:'(Twelve (12) complete Metal-Clad Switchgear assemblies as specified in Section 6 herein. No partial deliveries will be accepted.)' },
+    ]
+  },
+  '1:Page 4, Section 3.1': {
+    page:4, section:'Section 3.1 — Delivery Requirements',
+    lines:[
+      { text:'3.1  DELIVERY SCHEDULE', bold:true },
+      { text:' ' },
+      { text:'Time is of the essence. The Supplier shall deliver all equipment within:' },
+      { text:' ' },
+      { text:'Required delivery:', muted:true },
+      { text:'16 weeks ARO', highlight:true, bold:true },
+      { text:'(After Receipt of Order). Delivery to Duke Energy Receiving, Marshall Steam Station, Terrell, NC. Supplier must confirm production slot availability within 5 business days of order placement.' },
+    ]
+  },
+  '1:Page 6, Table 2': {
+    page:6, section:'Table 2 — Electrical Ratings',
+    lines:[
+      { text:'TABLE 2 — ELECTRICAL RATINGS AND REQUIREMENTS', bold:true },
+      { text:' ' },
+      { text:'Parameter                          Required Value', mono:true, muted:true },
+      { text:'─────────────────────────────────────────────────', mono:true, muted:true },
+      { text:'Nominal Voltage                    15kV', mono:true },
+      { text:'Maximum Voltage                    15.5kV', mono:true },
+      { text:'Continuous Current Rating          1200A', mono:true, highlight:true },
+      { text:'Voltage / Current:                 15kV / 1200A', mono:true, highlight:true, bold:true },
+      { text:'Symmetrical Short Circuit Rating   40kA', mono:true, highlight:true, bold:true },
+      { text:'Asymmetrical Short Circuit Rating  104kA', mono:true },
+      { text:'Impulse Withstand (BIL)            95kV', mono:true },
+    ]
+  },
+  '1:Page 28, Section 12': {
+    page:28, section:'Section 12 — Payment Terms',
+    lines:[
+      { text:'12.  PAYMENT TERMS', bold:true },
+      { text:' ' },
+      { text:'12.1  Unless otherwise agreed in writing, payment terms shall be:' },
+      { text:' ' },
+      { text:'Net 60', highlight:true, bold:true },
+      { text:'days from date of invoice following satisfactory delivery and acceptance. Invoices submitted prior to delivery will not be processed. Late payment interest shall not apply for the first 30 days beyond the payment due date.' },
+    ]
+  },
+  '1:Page 29, Section 13': {
+    page:29, section:'Section 13 — Warranty',
+    lines:[
+      { text:'13.  WARRANTY REQUIREMENTS', bold:true },
+      { text:' ' },
+      { text:'13.1  The Supplier shall provide a comprehensive warranty covering all equipment, materials, and workmanship for a minimum period of:' },
+      { text:' ' },
+      { text:'24 months post-commissioning', highlight:true, bold:true },
+      { text:'or 30 months from date of shipment, whichever occurs first. Warranty shall include all labour and parts costs for remediation of defects arising from design, materials, or workmanship.' },
+    ]
+  },
+  '1:Page 30, Section 14': {
+    page:30, section:'Section 14 — Liquidated Damages',
+    lines:[
+      { text:'14.  LIQUIDATED DAMAGES', bold:true },
+      { text:' ' },
+      { text:'14.1  In the event the Supplier fails to deliver the equipment by the agreed delivery date, the Buyer shall be entitled to deduct liquidated damages as follows:' },
+      { text:' ' },
+      { text:'Rate:', muted:true },
+      { text:'0.5% of the total contract value per week', highlight:true, bold:true },
+      { text:'of delay, or part thereof.' },
+      { text:' ' },
+      { text:'Cap:', muted:true },
+      { text:'10% of the total contract value.', highlight:true, bold:true },
+      { text:' ' },
+      { text:'⚠ Note: S&C standard terms: 0.25%/week, cap 5%. This clause is non-standard and requires legal review.', warn:true },
+    ]
+  },
+  '1:Page 33, Section 18': {
+    page:33, section:'Section 18 — Governing Law',
+    lines:[
+      { text:'18.  GOVERNING LAW AND JURISDICTION', bold:true },
+      { text:' ' },
+      { text:'18.1  This Agreement shall be governed by and construed in accordance with the laws of the State of:' },
+      { text:' ' },
+      { text:'North Carolina', highlight:true, bold:true },
+      { text:', United States of America, without regard to its conflict of law provisions. The parties submit to the exclusive jurisdiction of the courts of Mecklenburg County, North Carolina.' },
+    ]
+  },
+  // NextEra Energy
+  '2:Page 1, Header': {
+    page:1, section:'Document Header',
+    lines:[
+      { text:'TECHNICAL SPECIFICATION', bold:true, size:'lg' },
+      { text:'Outdoor Medium Voltage Switchgear — Data Centre Campus' },
+      { text:' ' },
+      { text:'Prepared by:', muted:true },
+      { text:'NextEra Energy Resources LLC', highlight:true, bold:true },
+      { text:'700 Universe Boulevard, Juno Beach, FL 33408' },
+      { text:'Specification No: NER-SPEC-2026-0089   Rev: 0' },
+    ]
+  },
+  '2:Page 3, Section 2': {
+    page:3, section:'Section 2 — Equipment Type',
+    lines:[
+      { text:'2.  EQUIPMENT DESCRIPTION', bold:true },
+      { text:' ' },
+      { text:'2.1  This specification covers the design, manufacture, factory testing, and delivery of:' },
+      { text:' ' },
+      { text:'38kV Outdoor Switchgear', highlight:true, bold:true },
+      { text:'(Metal-enclosed, arc-resistant construction) suitable for installation at the Grid Interconnection Substation serving the Proposed AI Data Centre Campus. Equipment shall comply with IEC 62271 and applicable IEEE standards.' },
+    ]
+  },
+  '2:Page 3, Section 2.1': {
+    page:3, section:'Section 2.1 — Application',
+    lines:[
+      { text:'2.1  APPLICATION AND SITE CONTEXT', bold:true },
+      { text:' ' },
+      { text:'The equipment specified herein is intended for service at the:' },
+      { text:' ' },
+      { text:'Data Centre Campus — 480MW', highlight:true, bold:true },
+      { text:'Grid Interconnection facility. The campus will operate at full load upon commissioning and requires uninterrupted power delivery. Availability requirements: 99.9999% (six nines). No scheduled maintenance outages permitted in the first 24 months of operation.' },
+    ]
+  },
+  '2:Page 5, Table 1': {
+    page:5, section:'Table 1 — Equipment Schedule',
+    lines:[
+      { text:'TABLE 1 — EQUIPMENT SCHEDULE', bold:true },
+      { text:' ' },
+      { text:'Item   Description                    Qty    Unit', mono:true, muted:true },
+      { text:'────────────────────────────────────────────────', mono:true, muted:true },
+      { text:'1      38kV Feeder Bay, 2000A          8 bays', mono:true, highlight:true, bold:true },
+      { text:'2      Protection & Control Panel      8 No.', mono:true },
+      { text:'3      DC Battery & Charger System     1 lot', mono:true },
+      { text:'4      Arc Flash Detection System      1 lot', mono:true },
+      { text:' ' },
+      { text:'Total Quantity: 8 bays', highlight:true, bold:true, mono:true },
+    ]
+  },
+  '2:Page 10, Table 3': {
+    page:10, section:'Table 3 — Electrical Parameters',
+    lines:[
+      { text:'TABLE 3 — ELECTRICAL PARAMETERS', bold:true },
+      { text:' ' },
+      { text:'Parameter                     Required', mono:true, muted:true },
+      { text:'──────────────────────────────────────', mono:true, muted:true },
+      { text:'System Voltage                38kV', mono:true },
+      { text:'Rated Voltage                 38kV / 2000A', mono:true, highlight:true, bold:true },
+      { text:'Symmetrical Fault Level       63kA for 1 sec', mono:true, highlight:true, bold:true },
+      { text:'DC Component (first cycle)    75kA peak', mono:true },
+      { text:'Frequency                     60Hz', mono:true },
+      { text:' ' },
+      { text:'⚠ Note: 63kA symmetrical exceeds S&C standard product range (max 50kA). Engineering review required.', warn:true },
+    ]
+  },
+  '2:Page 22, Section 9': {
+    page:22, section:'Section 9 — SCADA & Communications',
+    lines:[
+      { text:'9.  SCADA AND COMMUNICATIONS REQUIREMENTS', bold:true },
+      { text:' ' },
+      { text:'9.1  All protection and control equipment shall support remote monitoring via the NextEra SCADA platform using:' },
+      { text:' ' },
+      { text:'DNP3 protocol required', highlight:true, bold:true },
+      { text:'(DNP3.0 Level 2 compliant, as per IEEE 1815). Supplier shall provide full DNP3 point list and device profile documentation. Factory Acceptance Testing must include end-to-end SCADA communications test.' },
+    ]
+  },
+  '2:Page 44, Section 16': {
+    page:44, section:'Section 16 — Payment',
+    lines:[
+      { text:'16.  PAYMENT SCHEDULE', bold:true },
+      { text:' ' },
+      { text:'16.1  Payment shall be made as follows:' },
+      { text:' ' },
+      { text:'30% advance payment', highlight:true, bold:true },
+      { text:'upon contract execution and receipt of performance bond.' },
+      { text:' ' },
+      { text:'70% on delivery', highlight:true, bold:true },
+      { text:'and satisfactory completion of site acceptance testing. No retention shall apply.' },
+    ]
+  },
+  '2:Page 46, Section 18': {
+    page:46, section:'Section 18 — Liquidated Damages',
+    lines:[
+      { text:'18.  LIQUIDATED DAMAGES', bold:true },
+      { text:' ' },
+      { text:'18.1  In the event of delayed delivery, the Supplier shall be liable for liquidated damages at the rate of:' },
+      { text:' ' },
+      { text:'1% of contract price per week', highlight:true, bold:true },
+      { text:'of delay or part thereof.' },
+      { text:' ' },
+      { text:'Maximum aggregate liability:', muted:true },
+      { text:'15% of total contract price.', highlight:true, bold:true },
+      { text:' ' },
+      { text:'⚠ Note: S&C standard is 0.25%/week, cap 5%. This clause is 4× standard rate. Critical — escalate before responding.', warn:true },
+    ]
+  },
+  // Dominion
+  '3:Page 1, Header': {
+    page:1, section:'Document Header',
+    lines:[
+      { text:'PURCHASE ORDER', bold:true, size:'lg' },
+      { text:' ' },
+      { text:'Buyer:', muted:true },
+      { text:'Dominion Energy Services, Inc.', highlight:true, bold:true },
+      { text:'120 Tredegar Street, Richmond, VA 23219' },
+      { text:'PO Number: DE-2026-0441' },
+      { text:'PO Date: 1 April 2026' },
+    ]
+  },
+  '3:Page 1, Section 1': {
+    page:1, section:'Section 1 — Purchase Order Number',
+    lines:[
+      { text:'PURCHASE ORDER NUMBER', bold:true },
+      { text:' ' },
+      { text:'This Purchase Order is issued by Dominion Energy Services, Inc. under reference:' },
+      { text:' ' },
+      { text:'DE-2026-0441', highlight:true, bold:true },
+      { text:'All correspondence, invoices, and shipping documents must reference this PO number. This PO supersedes all prior communications.' },
+    ]
+  },
+  '3:Page 2, Section 2': {
+    page:2, section:'Section 2 — Product',
+    lines:[
+      { text:'2.  PRODUCT DESCRIPTION', bold:true },
+      { text:' ' },
+      { text:'Product:', muted:true },
+      { text:'Form 4 Recloser, 15kV', highlight:true, bold:true },
+      { text:'Single-phase, pole-mounted automatic circuit recloser, 15kV class, suitable for overhead distribution line protection. Compliant with ANSI/IEEE C37.60.' },
+    ]
+  },
+  '3:Page 2, Table 1': {
+    page:2, section:'Table 1 — Line Item',
+    lines:[
+      { text:'TABLE 1 — LINE ITEMS', bold:true },
+      { text:' ' },
+      { text:'Item   Description              Qty     Unit Price    Total', mono:true, muted:true },
+      { text:'───────────────────────────────────────────────────────────', mono:true, muted:true },
+      { text:'001    Form 4 Recloser 15kV     24 units', mono:true, highlight:true, bold:true },
+      { text:'       S&C Catalogue Ref:       6805-E2' , mono:true },
+    ]
+  },
+  '3:Page 3, Section 3': {
+    page:3, section:'Section 3 — Pricing',
+    lines:[
+      { text:'3.  PRICING', bold:true },
+      { text:' ' },
+      { text:'Unit Price:', muted:true },
+      { text:'$42,500 USD', highlight:true, bold:true },
+      { text:'per recloser, inclusive of standard factory testing, documentation package, and DDP delivery to Richmond, VA.' },
+      { text:' ' },
+      { text:'Total PO Value:', muted:true },
+      { text:'$1,020,000 USD', highlight:true, bold:true },
+      { text:'(One Million and Twenty Thousand US Dollars). Fixed price — no escalation.' },
+    ]
+  },
+  '3:Page 4, Section 4': {
+    page:4, section:'Section 4 — Delivery',
+    lines:[
+      { text:'4.  DELIVERY REQUIREMENTS', bold:true },
+      { text:' ' },
+      { text:'Required delivery:', muted:true },
+      { text:'8 weeks ARO', highlight:true, bold:true },
+      { text:'(After Receipt of Order). DDP Dominion Energy Warehouse, Richmond, VA. Supplier to advise firm delivery date within 5 business days of order acceptance.' },
+    ]
+  },
+  '3:Page 8, Section 10': {
+    page:8, section:'Section 10 — Payment Terms',
+    lines:[
+      { text:'10.  PAYMENT TERMS', bold:true },
+      { text:' ' },
+      { text:'Payment shall be made within:', muted:true },
+      { text:' ' },
+      { text:'Net 45', highlight:true, bold:true },
+      { text:'days of receipt of a valid invoice following delivery and acceptance. Standard Dominion Energy payment terms apply. No early payment discount offered.' },
+    ]
+  },
+};
+
+function DocViewer({ snippet, field, value, onClose }) {
+  if (!snippet) return null;
+  return (
+    <div style={{
+      position:'fixed', top:0, right:0, bottom:0, width:480,
+      background:'white', boxShadow:'-4px 0 24px rgba(0,0,0,0.12)',
+      zIndex:1000, display:'flex', flexDirection:'column',
+      animation:'slideInRight 0.22s ease'
+    }}>
+      <style>{`@keyframes slideInRight { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }`}</style>
+
+      {/* Header */}
+      <div style={{padding:'16px 20px', borderBottom:'1px solid var(--border)', flexShrink:0, background:'var(--bg)'}}>
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start'}}>
+          <div>
+            <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.07em', color:'var(--text-muted)', marginBottom:4}}>Source Document</div>
+            <div style={{fontSize:14, fontWeight:700, color:'var(--text)'}}>Page {snippet.page} — {snippet.section}</div>
+            <div style={{fontSize:12, color:'var(--text-muted)', marginTop:2}}>Extracted: <span style={{fontWeight:600, color:'var(--green)'}}>{field}</span> → <span style={{fontFamily:"'Courier New',monospace", color:'var(--text)'}}>{value}</span></div>
+          </div>
+          <button onClick={onClose} style={{
+            width:28, height:28, borderRadius:'50%', border:'1px solid var(--border)',
+            background:'white', cursor:'pointer', fontSize:14, color:'var(--text-muted)',
+            display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0
+          }}>✕</button>
+        </div>
+        <div style={{marginTop:10, display:'flex', gap:8, alignItems:'center', fontSize:12}}>
+          <span style={{padding:'2px 8px', background:'rgba(255,215,0,0.3)', border:'1px solid rgba(200,160,0,0.3)', borderRadius:4, fontWeight:600, color:'#856404'}}>■ Highlighted = extracted value</span>
+          <span style={{color:'var(--text-muted)'}}>Click anywhere to dismiss</span>
+        </div>
+      </div>
+
+      {/* Document body */}
+      <div style={{flex:1, overflowY:'auto', padding:'24px 28px', background:'#FAFAFA'}}>
+        <div style={{
+          background:'white', border:'1px solid var(--border)',
+          borderRadius:8, padding:'28px 32px',
+          boxShadow:'0 1px 4px rgba(0,0,0,0.06)',
+          fontFamily:"'Times New Roman', Georgia, serif",
+          fontSize:14, lineHeight:1.8, color:'#1a1a1a'
+        }}>
+          {snippet.lines.map((line, i) => {
+            if (line.text === ' ') return <div key={i} style={{height:8}}/>;
+            return (
+              <div key={i} style={{
+                marginBottom: line.bold && !line.highlight ? 2 : 1,
+                fontFamily: line.mono ? "'Courier New', monospace" : "'Times New Roman', Georgia, serif",
+                fontSize: line.size==='lg' ? 16 : line.mono ? 12 : 14,
+                fontWeight: line.bold ? 700 : 400,
+                color: line.muted ? '#888' : line.warn ? '#92400e' : '#1a1a1a',
+                background: line.highlight ? 'rgba(255,230,0,0.45)' : line.warn ? 'rgba(245,158,11,0.1)' : 'transparent',
+                padding: line.highlight ? '1px 3px' : line.warn ? '6px 10px' : '0',
+                borderRadius: line.highlight ? 3 : line.warn ? 4 : 0,
+                borderLeft: line.warn ? '3px solid var(--amber)' : 'none',
+                display: 'block',
+              }}>
+                {line.text}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const PIPELINE_DATA = {
   'Incoming': [
     { company:'Duke Energy Corp', desc:'15kV Metal-Clad Switchgear x12', flag:'flag-critical', flagLabel:'2 Flags', age:'Today' },
@@ -601,6 +972,13 @@ function Inbox() {
   const [docTab, setDocTab] = useState('AI Summary');
   const [escalated, setEscalated] = useState({});
   const [reviewed, setReviewed] = useState({});
+  const [docViewer, setDocViewer] = useState(null); // { snippet, field, value }
+
+  function openSource(docId, source, field, value) {
+    const key = `${docId}:${source}`;
+    const snippet = DOC_SNIPPETS[key];
+    if (snippet) setDocViewer({ snippet, field, value });
+  }
 
   const critCount = selected.flags.filter(f=>f.type==='red').length;
   const warnCount = selected.flags.filter(f=>f.type==='amber').length;
@@ -608,6 +986,12 @@ function Inbox() {
 
   return (
     <div className="page" style={{paddingBottom:0}}>
+      {docViewer && (
+        <>
+          <div onClick={()=>setDocViewer(null)} style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.25)',zIndex:999}}/>
+          <DocViewer snippet={docViewer.snippet} field={docViewer.field} value={docViewer.value} onClose={()=>setDocViewer(null)}/>
+        </>
+      )}
 
       {/* Context bar */}
       <div style={{
@@ -732,7 +1116,10 @@ function Inbox() {
                       <div key={i} style={{padding:'10px 14px',background:'#F9FAFB',border:'1px solid var(--border)',borderRadius:'var(--radius-sm)'}}>
                         <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--text-muted)',marginBottom:3}}>{row.field}</div>
                         <div style={{fontSize:13,fontWeight:600,color:'var(--text)',fontFamily:"'Courier New',monospace"}}>{row.value}</div>
-                        <div style={{fontSize:10,color:'var(--text-muted)',marginTop:2}}>{row.source}</div>
+                        <div
+                          style={{fontSize:10,color:'var(--blue)',marginTop:3,cursor:'pointer',textDecoration:'underline'}}
+                          onClick={()=>openSource(selected.id, row.source, row.field, row.value)}
+                        >{row.source} ↗</div>
                       </div>
                     ))}
                   </div>
@@ -791,7 +1178,14 @@ function Inbox() {
                             </span>
                           </td>
                           <td>
-                            <span className="source-link" title="Click to verify in source document">{row.source}</span>
+                            <span
+                              className="source-link"
+                              title="Click to view in source document"
+                              onClick={()=>openSource(selected.id, row.source, row.field, row.value)}
+                              style={{cursor:'pointer'}}
+                            >
+                              {row.source} ↗
+                            </span>
                           </td>
                         </tr>
                       ))}
