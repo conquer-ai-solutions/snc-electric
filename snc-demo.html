@@ -586,64 +586,198 @@ function FlowDiagram() {
   );
 }
 
+const SUMMARIES = {
+  1: "Duke Energy is requesting 12 units of 15kV Metal-Clad Switchgear — a standard S&C product configuration. The technical spec is clean. The commercial terms are not: their liquidated damages clause is double S&C's standard and needs legal sign-off before any quote is issued. Delivery at 16 weeks is tight but feasible subject to production capacity check.",
+  2: "NextEra Energy is specifying outdoor switchgear for a 480MW AI data centre campus — a high-value, high-visibility opportunity. Three flags require attention before responding: a significantly above-standard LD clause at 1%/week, a 63kA fault rating that falls outside S&C's standard product range, and a DNP3 SCADA integration requirement that adds scope and cost.",
+  3: "Dominion Energy's purchase order is clean. Standard product, standard terms, standard payment. The AI found no exceptions. This PO is clear to process — no commercial review required.",
+};
+
 function Inbox() {
   const [selected, setSelected] = useState(INBOX[0]);
-  const [docTab, setDocTab] = useState('Extracted Data');
+  const [docTab, setDocTab] = useState('AI Summary');
+  const [escalated, setEscalated] = useState({});
+  const [reviewed, setReviewed] = useState({});
+
+  const critCount = selected.flags.filter(f=>f.type==='red').length;
+  const warnCount = selected.flags.filter(f=>f.type==='amber').length;
+  const isClean = critCount===0 && warnCount===0;
 
   return (
     <div className="page" style={{paddingBottom:0}}>
+
+      {/* Context bar */}
+      <div style={{
+        display:'flex', alignItems:'center', gap:10, padding:'10px 16px',
+        background:'var(--green-bg)', border:'1px solid rgba(16,185,129,0.2)',
+        borderRadius:'var(--radius-sm)', marginBottom:16, fontSize:13, color:'var(--text-secondary)'
+      }}>
+        <span style={{fontSize:15}}>⚡</span>
+        <span><strong style={{color:'var(--green)'}}>The AI has already read every document below</strong> — before anyone on the commercial team opened their inbox. Click any document to see what it found.</span>
+      </div>
+
       <div className="two-col">
+
+        {/* LEFT — inbox list */}
         <div className="panel">
           <div className="panel-header">
-            <span className="panel-title">Inbound Documents</span>
+            <div>
+              <span className="panel-title">Inbound Documents</span>
+              <div style={{fontSize:11,color:'var(--text-muted)',marginTop:2}}>AI review complete · Tue 7 Apr</div>
+            </div>
             <span className="pill pill-brand">3 today</span>
           </div>
           <div className="panel-body">
-            {INBOX.map(item => (
-              <div key={item.id} className={`inbox-item${selected?.id===item.id?' active':''}`} onClick={()=>{setSelected(item);setDocTab('Extracted Data');}}>
-                <div className="inbox-icon" style={{background:item.status==='new'?'var(--brand-light)':item.status==='done'?'var(--green-bg)':'var(--amber-bg)'}}>{item.icon}</div>
-                <div className="inbox-meta">
-                  <div className="inbox-from">{item.from}</div>
-                  <div className="inbox-subject">{item.subject}</div>
-                  <div className="inbox-time">{item.time}</div>
+            {INBOX.map(item => {
+              const iCrit = item.flags.filter(f=>f.type==='red').length;
+              const iWarn = item.flags.filter(f=>f.type==='amber').length;
+              const iClean = iCrit===0 && iWarn===0;
+              return (
+                <div key={item.id} className={`inbox-item${selected?.id===item.id?' active':''}`}
+                  onClick={()=>{setSelected(item);setDocTab('AI Summary');}}>
+                  <div className="inbox-icon" style={{
+                    background: iCrit>0 ? 'var(--red-bg)' : iWarn>0 ? 'var(--amber-bg)' : 'var(--green-bg)'
+                  }}>{item.icon}</div>
+                  <div className="inbox-meta">
+                    <div className="inbox-from">{item.from}</div>
+                    <div className="inbox-subject">{item.subject}</div>
+                    <div style={{display:'flex',alignItems:'center',gap:6,marginTop:4}}>
+                      {iCrit>0 && <span style={{fontSize:10,fontWeight:700,color:'var(--red)',background:'var(--red-bg)',padding:'1px 7px',borderRadius:20}}>{iCrit} Critical</span>}
+                      {iWarn>0 && <span style={{fontSize:10,fontWeight:700,color:'var(--amber)',background:'var(--amber-bg)',padding:'1px 7px',borderRadius:20}}>{iWarn} Warning</span>}
+                      {iClean && <span style={{fontSize:10,fontWeight:700,color:'var(--green)',background:'var(--green-bg)',padding:'1px 7px',borderRadius:20}}>Clear to process</span>}
+                      <span style={{fontSize:11,color:'var(--text-muted)',marginLeft:'auto'}}>{item.time}</span>
+                    </div>
+                  </div>
                 </div>
-                <span className={`inbox-badge ${item.status==='new'?'badge-new':item.status==='done'?'badge-done':'badge-review'}`}>
-                  {item.status==='new'?'New':item.status==='done'?'Done':'Review'}
-                </span>
-              </div>
-            ))}
+              );
+            })}
+          </div>
+
+          {/* AI processing indicator */}
+          <div style={{padding:'12px 18px',borderTop:'1px solid var(--border)',background:'#FAFAFA'}}>
+            <div style={{display:'flex',alignItems:'center',gap:8,fontSize:12,color:'var(--text-muted)'}}>
+              <div style={{width:6,height:6,borderRadius:'50%',background:'var(--green)',animation:'pulse 2s infinite',flexShrink:0}}/>
+              AI monitoring inbox · Next document processed on arrival
+            </div>
           </div>
         </div>
 
+        {/* RIGHT — document detail */}
         {selected && (
           <div className="panel">
+
+            {/* Doc header */}
             <div className="doc-header">
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}}>
                 <div>
                   <div className="doc-title">{selected.subject}</div>
                   <div className="doc-meta">{selected.from} · {selected.docType} · {selected.pages} pages · Received {selected.time}</div>
                 </div>
-                <div style={{display:'flex',gap:8}}>
-                  <span className={`pill ${selected.flags.some(f=>f.type==='red')?'pill-red':selected.flags.some(f=>f.type==='amber')?'pill-amber':'pill-green'}`}>
-                    {selected.flags.filter(f=>f.type==='red').length} Critical · {selected.flags.filter(f=>f.type==='amber').length} Warning
-                  </span>
+                <div style={{display:'flex',gap:6,flexShrink:0}}>
+                  {critCount>0 && <span className="pill pill-red">🚨 {critCount} Critical</span>}
+                  {warnCount>0 && <span className="pill pill-amber">⚠️ {warnCount} Warning</span>}
+                  {isClean && <span className="pill pill-green">✅ Clear</span>}
                 </div>
               </div>
+              {/* AI processed notice */}
+              <div style={{
+                display:'flex',alignItems:'center',gap:8,padding:'8px 12px',
+                background:'var(--green-bg)',borderRadius:'var(--radius-sm)',
+                fontSize:12,color:'var(--text-secondary)'
+              }}>
+                <span style={{fontSize:13}}>🤖</span>
+                <span><strong style={{color:'var(--green)'}}>AI reviewed in &lt;90 seconds</strong> · Read all {selected.pages} pages · Extracted {selected.extracted.length} fields · Raised {selected.flags.length} flag{selected.flags.length!==1?'s':''}</span>
+              </div>
             </div>
+
+            {/* Tabs */}
             <div className="doc-tabs">
-              {['Extracted Data','Flags & Actions'].map(t => (
-                <div key={t} className={`doc-tab${docTab===t?' active':''}`} onClick={()=>setDocTab(t)}>{t}</div>
+              {['AI Summary','Extracted Fields','Flags & Actions'].map(t => (
+                <div key={t} className={`doc-tab${docTab===t?' active':''}`} onClick={()=>setDocTab(t)}>
+                  {t==='AI Summary' && '🤖 '}
+                  {t==='Extracted Fields' && '📋 '}
+                  {t==='Flags & Actions' && (critCount>0?'🚨 ':warnCount>0?'⚠️ ':'✅ ')}
+                  {t}
+                </div>
               ))}
             </div>
+
             <div className="doc-content">
-              {docTab==='Extracted Data' && (
+
+              {/* AI SUMMARY TAB */}
+              {docTab==='AI Summary' && (
                 <div>
-                  <div style={{fontSize:12,color:'var(--text-muted)',marginBottom:16}}>All fields extracted automatically. Click any source reference to verify in the original document.</div>
+                  <div style={{
+                    padding:'18px 20px', background:'linear-gradient(135deg,#F0FDF4,#F0F9FF)',
+                    border:'1px solid rgba(16,185,129,0.2)', borderRadius:'var(--radius)',
+                    marginBottom:20
+                  }}>
+                    <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:10}}>
+                      <div style={{width:28,height:28,borderRadius:8,background:'var(--green)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,flexShrink:0}}>🤖</div>
+                      <div>
+                        <div style={{fontSize:13,fontWeight:700,color:'var(--text)'}}>AI Summary</div>
+                        <div style={{fontSize:11,color:'var(--text-muted)'}}>Generated from {selected.pages}-page document · {selected.extracted.length} fields extracted</div>
+                      </div>
+                    </div>
+                    <p style={{fontSize:14,color:'var(--text-secondary)',lineHeight:1.75}}>{SUMMARIES[selected.id]}</p>
+                  </div>
+
+                  {/* Quick-view key fields */}
+                  <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.07em',color:'var(--text-muted)',marginBottom:10}}>Key fields at a glance</div>
+                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:20}}>
+                    {selected.extracted.slice(0,6).map((row,i) => (
+                      <div key={i} style={{padding:'10px 14px',background:'#F9FAFB',border:'1px solid var(--border)',borderRadius:'var(--radius-sm)'}}>
+                        <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--text-muted)',marginBottom:3}}>{row.field}</div>
+                        <div style={{fontSize:13,fontWeight:600,color:'var(--text)',fontFamily:"'Courier New',monospace"}}>{row.value}</div>
+                        <div style={{fontSize:10,color:'var(--text-muted)',marginTop:2}}>{row.source}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Flags preview */}
+                  {selected.flags.filter(f=>f.type==='red').length > 0 && (
+                    <div style={{padding:'12px 16px',background:'var(--red-bg)',border:'1px solid rgba(239,68,68,0.2)',borderRadius:'var(--radius-sm)',marginBottom:8,cursor:'pointer'}}
+                      onClick={()=>setDocTab('Flags & Actions')}>
+                      <div style={{fontSize:12,fontWeight:700,color:'var(--red)',marginBottom:3}}>🚨 {selected.flags.filter(f=>f.type==='red').length} critical flag{selected.flags.filter(f=>f.type==='red').length>1?'s':''} require attention before responding →</div>
+                      <div style={{fontSize:12,color:'var(--text-secondary)'}}>{selected.flags.find(f=>f.type==='red')?.title}</div>
+                    </div>
+                  )}
+                  {selected.flags.filter(f=>f.type==='amber').length > 0 && (
+                    <div style={{padding:'12px 16px',background:'var(--amber-bg)',border:'1px solid rgba(245,158,11,0.2)',borderRadius:'var(--radius-sm)',marginBottom:8,cursor:'pointer'}}
+                      onClick={()=>setDocTab('Flags & Actions')}>
+                      <div style={{fontSize:12,fontWeight:700,color:'var(--amber)',marginBottom:3}}>⚠️ {selected.flags.filter(f=>f.type==='amber').length} warning{selected.flags.filter(f=>f.type==='amber').length>1?'s':''} to review →</div>
+                      <div style={{fontSize:12,color:'var(--text-secondary)'}}>{selected.flags.find(f=>f.type==='amber')?.title}</div>
+                    </div>
+                  )}
+                  {isClean && (
+                    <div style={{padding:'12px 16px',background:'var(--green-bg)',border:'1px solid rgba(16,185,129,0.2)',borderRadius:'var(--radius-sm)'}}>
+                      <div style={{fontSize:12,fontWeight:700,color:'var(--green)'}}>✅ No exceptions found — clear to process</div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* EXTRACTED FIELDS TAB */}
+              {docTab==='Extracted Fields' && (
+                <div>
+                  <div style={{
+                    padding:'10px 14px', background:'#F9FAFB', border:'1px solid var(--border)',
+                    borderRadius:'var(--radius-sm)', marginBottom:16, fontSize:12,
+                    color:'var(--text-secondary)', lineHeight:1.6
+                  }}>
+                    <strong style={{color:'var(--text)'}}>How to read this table:</strong> Every field was extracted automatically by the AI from the source document. The confidence score reflects how clearly the value appeared in the text. Click any source reference to see exactly where in the document the AI found it — every extraction is verifiable.
+                  </div>
                   <table className="extract-table">
-                    <thead><tr><th>Field</th><th>Extracted Value</th><th>Confidence</th><th>Source</th></tr></thead>
+                    <thead>
+                      <tr>
+                        <th>Field</th>
+                        <th>Extracted Value</th>
+                        <th>Confidence</th>
+                        <th>Source in Document</th>
+                      </tr>
+                    </thead>
                     <tbody>
                       {selected.extracted.map((row,i) => (
-                        <tr key={i}>
+                        <tr key={i} style={{background: row.confidence<88 ? 'rgba(245,158,11,0.03)' : 'transparent'}}>
                           <td><span className="field-name">{row.field}</span></td>
                           <td><span className="field-val">{row.value}</span></td>
                           <td>
@@ -652,31 +786,63 @@ function Inbox() {
                               {row.confidence}%
                             </span>
                           </td>
-                          <td><span className="source-link">{row.source}</span></td>
+                          <td>
+                            <span className="source-link" title="Click to verify in source document">{row.source}</span>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                </div>
-              )}
-              {docTab==='Flags & Actions' && (
-                <div>
-                  <div style={{fontSize:12,color:'var(--text-muted)',marginBottom:16}}>Automatically generated based on S&C's commercial standards and preferred technical configurations.</div>
-                  {selected.flags.map((flag,i) => (
-                    <div key={i} className={`flag-card ${flag.type}`}>
-                      <div className="flag-icon">{flag.type==='red'?'🚨':flag.type==='amber'?'⚠️':'✅'}</div>
-                      <div>
-                        <div className="flag-title">{flag.title}</div>
-                        <div className="flag-body">{flag.body}</div>
-                      </div>
-                    </div>
-                  ))}
-                  <div style={{marginTop:20,display:'flex',gap:10}}>
-                    <button style={{flex:1,padding:'11px 0',background:'var(--brand)',color:'white',border:'none',borderRadius:'var(--radius-sm)',fontWeight:600,fontSize:14,fontFamily:'var(--font)',cursor:'pointer'}}>Escalate to Commercial</button>
-                    <button style={{flex:1,padding:'11px 0',background:'white',color:'var(--text)',border:'1px solid var(--border)',borderRadius:'var(--radius-sm)',fontWeight:500,fontSize:14,fontFamily:'var(--font)',cursor:'pointer'}}>Mark Reviewed</button>
+                  <div style={{marginTop:12,fontSize:12,color:'var(--text-muted)',lineHeight:1.6}}>
+                    All {selected.extracted.length} fields extracted automatically. No manual data entry. These values are written directly to the Salesforce opportunity record on receipt.
                   </div>
                 </div>
               )}
+
+              {/* FLAGS & ACTIONS TAB */}
+              {docTab==='Flags & Actions' && (
+                <div>
+                  <div style={{
+                    padding:'10px 14px', background:'#F9FAFB', border:'1px solid var(--border)',
+                    borderRadius:'var(--radius-sm)', marginBottom:16, fontSize:12,
+                    color:'var(--text-secondary)', lineHeight:1.6
+                  }}>
+                    <strong style={{color:'var(--text)'}}>How flags work:</strong> The AI compares every extracted clause against S&C's commercial standards baseline and preferred technical configurations. Anything that deviates is flagged here — automatically, before anyone reads the document.
+                  </div>
+
+                  {selected.flags.map((flag,i) => (
+                    <div key={i} className={`flag-card ${flag.type}`} style={{marginBottom:10}}>
+                      <div className="flag-icon">{flag.type==='red'?'🚨':flag.type==='amber'?'⚠️':'✅'}</div>
+                      <div style={{flex:1}}>
+                        <div className="flag-title">{flag.title}</div>
+                        <div className="flag-body">{flag.body}</div>
+                        {flag.type==='red' && !escalated[`${selected.id}-${i}`] && (
+                          <button onClick={()=>setEscalated(e=>({...e,[`${selected.id}-${i}`]:true}))} style={{
+                            marginTop:10,padding:'6px 14px',background:'var(--red)',color:'white',
+                            border:'none',borderRadius:'var(--radius-sm)',fontSize:12,fontWeight:600,
+                            fontFamily:'var(--font)',cursor:'pointer'
+                          }}>Escalate to Commercial Team →</button>
+                        )}
+                        {escalated[`${selected.id}-${i}`] && (
+                          <div style={{marginTop:10,fontSize:12,color:'var(--green)',fontWeight:600}}>✓ Escalated — commercial team notified</div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+
+                  <div style={{marginTop:20,padding:'14px 16px',background:'#F9FAFB',border:'1px solid var(--border)',borderRadius:'var(--radius-sm)',fontSize:12,color:'var(--text-secondary)',lineHeight:1.6}}>
+                    <strong style={{color:'var(--text)'}}>Human in the loop: </strong>The AI raises the flags. Your commercial team makes the call. No document is actioned without human sign-off — the AI's job is to make sure nothing gets missed and nothing gets rushed without the right people knowing about it.
+                  </div>
+
+                  <div style={{marginTop:16,display:'flex',gap:10}}>
+                    {!reviewed[selected.id]
+                      ? <button onClick={()=>setReviewed(r=>({...r,[selected.id]:true}))} style={{flex:1,padding:'11px 0',background:'var(--text)',color:'white',border:'none',borderRadius:'var(--radius-sm)',fontWeight:600,fontSize:14,fontFamily:'var(--font)',cursor:'pointer'}}>Mark as Reviewed ✓</button>
+                      : <div style={{flex:1,padding:'11px 0',background:'var(--green-bg)',border:'1px solid rgba(16,185,129,0.2)',borderRadius:'var(--radius-sm)',fontWeight:600,fontSize:14,color:'var(--green)',textAlign:'center'}}>✓ Reviewed — logged with timestamp</div>
+                    }
+                  </div>
+                </div>
+              )}
+
             </div>
           </div>
         )}
