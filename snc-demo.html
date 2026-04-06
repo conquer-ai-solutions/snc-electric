@@ -344,18 +344,71 @@ function Header({ tab, setTab }) {
   );
 }
 
-function Overview() {
+function Overview({ setTab }) {
+  const [activeOutcome, setActiveOutcome] = React.useState(0);
+  const outcomes = [
+    {
+      label: 'Today — without AI',
+      color: 'var(--red)',
+      bg: 'var(--red-bg)',
+      border: 'rgba(239,68,68,0.2)',
+      steps: [
+        { icon:'📧', label:'RFQ lands in inbox', sub:'From any customer, in any format' },
+        { icon:'🕐', label:'Sits in queue', sub:'Hours or days before anyone opens it' },
+        { icon:'👤', label:'Someone reads it manually', sub:'34 pages. Every time.' },
+        { icon:'📝', label:'Key terms noted by hand', sub:'Voltage, delivery, LD clauses — if they catch them' },
+        { icon:'❓', label:'Non-standard terms missed', sub:'Or caught too late — after a price is already quoted' },
+        { icon:'📋', label:'Re-keyed into Salesforce', sub:'Manual entry, prone to error' },
+      ]
+    },
+    {
+      label: 'With AI',
+      color: 'var(--green)',
+      bg: 'var(--green-bg)',
+      border: 'rgba(16,185,129,0.2)',
+      steps: [
+        { icon:'📧', label:'RFQ lands in inbox', sub:'From any customer, in any format', ai:false },
+        { icon:'🔍', label:'Classified in seconds', sub:'Document type, customer, product — identified automatically', ai:true },
+        { icon:'⚡', label:'Every field extracted', sub:'Voltage, quantity, delivery, payment terms, LD clauses', ai:true },
+        { icon:'⚖️', label:'Checked against S&C standard', sub:'Non-standard terms flagged before anyone opens the doc', ai:true },
+        { icon:'👤', label:'Salesperson sees what matters', sub:'Flags, actions, and full context — not a 34-page PDF', ai:false },
+        { icon:'📋', label:'Salesforce updated automatically', sub:'No re-keying. Opportunity record populated on receipt.', ai:false },
+      ]
+    }
+  ];
+
   return (
     <div className="page">
-      <div className="cover-hero">
+
+      {/* Indicative notice — upfront */}
+      <div style={{
+        display:'flex', alignItems:'center', gap:10, padding:'10px 16px',
+        background:'var(--amber-bg)', border:'1px solid rgba(245,158,11,0.25)',
+        borderRadius:'var(--radius-sm)', marginBottom:28, fontSize:13, color:'var(--text-secondary)'
+      }}>
+        <span style={{fontSize:16}}>⚠️</span>
+        <span><strong style={{color:'var(--amber)'}}>Indicative demo</strong> — all data is illustrative. Built to show what a Conquer AI solution could look like for S&C Electric's quote-to-contract process. Explore the tabs to see it in action.</span>
+      </div>
+
+      {/* Hero */}
+      <div className="cover-hero" style={{marginBottom:40}}>
         <div className="cover-left">
-          <div className="cover-eyebrow">Conquer AI · Indicative Demo</div>
-          <h1 className="cover-title">Quote-to-Contract<br/><span>AI Agent</span></h1>
-          <p className="cover-sub">Every inbound RFQ, specification, and purchase order — automatically classified, extracted, reviewed against S&C's commercial standards, and flagged before a human ever opens the document.</p>
+          <div className="cover-eyebrow">Conquer AI · Quote-to-Contract</div>
+          <h1 className="cover-title">Your commercial team<br/>spends hours on<br/><span>documents. It shouldn't.</span></h1>
+          <p className="cover-sub">Every inbound RFQ, spec, and purchase order — read, extracted, checked against your commercial standards, and flagged in under two minutes. Before your salesperson opens their inbox.</p>
           <div className="cover-stats">
-            <div><div className="stat-val">~70%</div><div className="stat-lbl">Docs processed without manual read</div></div>
-            <div><div className="stat-val">&lt;2min</div><div className="stat-lbl">First review per document</div></div>
-            <div><div className="stat-val">100%</div><div className="stat-lbl">Commercial terms checked</div></div>
+            <div>
+              <div className="stat-val">&lt;2 min</div>
+              <div className="stat-lbl">From receipt to first review</div>
+            </div>
+            <div>
+              <div className="stat-val">100%</div>
+              <div className="stat-lbl">Of T&C clauses checked, every time</div>
+            </div>
+            <div>
+              <div className="stat-val">0</div>
+              <div className="stat-lbl">Documents re-keyed into Salesforce</div>
+            </div>
           </div>
         </div>
         <div className="cover-visual">
@@ -363,68 +416,138 @@ function Overview() {
         </div>
       </div>
 
-      <div style={{marginBottom:32}}>
-        <div style={{fontSize:13,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.07em',color:'var(--text-muted)',marginBottom:16}}>How it works</div>
-        <div className="flow" style={{overflowX:'auto',padding:'20px 4px'}}>
+      {/* Before / After toggle */}
+      <div style={{marginBottom:40}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
+          <div style={{fontSize:13,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.07em',color:'var(--text-muted)'}}>The process — before and after</div>
+          <div style={{display:'flex',background:'#F3F4F6',borderRadius:10,padding:3,gap:2}}>
+            {outcomes.map((o,i) => (
+              <button key={i} onClick={()=>setActiveOutcome(i)} style={{
+                padding:'6px 16px', borderRadius:8, border:'none', cursor:'pointer',
+                fontFamily:'var(--font)', fontSize:13, fontWeight: activeOutcome===i ? 600 : 500,
+                background: activeOutcome===i ? 'white' : 'transparent',
+                color: activeOutcome===i ? o.color : 'var(--text-muted)',
+                boxShadow: activeOutcome===i ? 'var(--shadow-sm)' : 'none',
+                transition:'all 0.2s'
+              }}>{o.label}</button>
+            ))}
+          </div>
+        </div>
+
+        <div style={{
+          background:'white', border:`1px solid ${outcomes[activeOutcome].border}`,
+          borderRadius:'var(--radius-lg)', padding:'28px 32px',
+          boxShadow:'var(--shadow-sm)', transition:'all 0.3s'
+        }}>
+          <div style={{display:'flex', alignItems:'flex-start', gap:0, overflowX:'auto'}}>
+            {outcomes[activeOutcome].steps.map((step, i, arr) => (
+              <React.Fragment key={i}>
+                <div style={{flexShrink:0, width:148, textAlign:'center'}}>
+                  <div style={{
+                    background: step.ai ? outcomes[activeOutcome].bg : '#F9FAFB',
+                    border: `1.5px solid ${step.ai ? outcomes[activeOutcome].border : 'var(--border)'}`,
+                    borderRadius:10, padding:'14px 10px', position:'relative', marginBottom:8
+                  }}>
+                    {step.ai && (
+                      <div style={{
+                        position:'absolute', top:-9, left:'50%', transform:'translateX(-50%)',
+                        background:'var(--green)', color:'white', fontSize:9, fontWeight:700,
+                        padding:'2px 8px', borderRadius:20, whiteSpace:'nowrap', letterSpacing:'0.05em'
+                      }}>AI</div>
+                    )}
+                    <div style={{fontSize:22, marginBottom:7}}>{step.icon}</div>
+                    <div style={{fontSize:12, fontWeight:700, color:'var(--text)', lineHeight:1.4, marginBottom:4}}>{step.label}</div>
+                    <div style={{fontSize:11, color:'var(--text-muted)', lineHeight:1.4}}>{step.sub}</div>
+                  </div>
+                </div>
+                {i < arr.length-1 && (
+                  <div style={{
+                    fontSize:16, color: step.ai ? outcomes[activeOutcome].color : 'var(--text-muted)',
+                    flexShrink:0, margin:'24px 2px 0', fontWeight:300
+                  }}>→</div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+          {activeOutcome===0 && (
+            <div style={{marginTop:20,padding:'12px 16px',background:'var(--red-bg)',borderRadius:'var(--radius-sm)',fontSize:13,color:'var(--text-secondary)',lineHeight:1.6}}>
+              <strong style={{color:'var(--red)'}}>The risk: </strong>Non-standard liquidated damages, tight delivery commitments, and out-of-spec technical requirements get missed because there are too many documents and too little time. By the time an issue surfaces, a quote is already in the customer's hands.
+            </div>
+          )}
+          {activeOutcome===1 && (
+            <div style={{marginTop:20,padding:'12px 16px',background:'var(--green-bg)',borderRadius:'var(--radius-sm)',fontSize:13,color:'var(--text-secondary)',lineHeight:1.6}}>
+              <strong style={{color:'var(--green)'}}>The difference: </strong>The AI does the reading. Your commercial team does the deciding. Every flag is raised before a salesperson responds — not after a commitment has been made.
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Where AI sits — explicit callout */}
+      <div style={{marginBottom:40}}>
+        <div style={{fontSize:13,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.07em',color:'var(--text-muted)',marginBottom:16}}>Where the AI sits in your process</div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12}}>
           {[
-            { icon:'📧', label:'Inbound Document', sub:'RFQ / Spec / PO via email or Salesforce', highlight:false, ai:false },
-            { icon:'🔍', label:'Classify & Extract', sub:'Document type, key fields, commercial terms', highlight:true, ai:true },
-            { icon:'⚖️', label:'Review vs Standard', sub:'Check against S&C commercial and technical baselines', highlight:true, ai:true },
-            { icon:'🚩', label:'Flag & Prioritise', sub:'Non-standard terms, technical risks, actions required', highlight:true, ai:true },
-            { icon:'👤', label:'Human Decision', sub:'Approve, escalate, or reject — with full context', highlight:false, ai:false },
-            { icon:'📋', label:'Quote Issued', sub:'Into Salesforce with audit trail', highlight:false, ai:false },
-          ].map((n,i,arr) => (
-            <React.Fragment key={i}>
-              <div className="flow-node">
-                <div className={`flow-box${n.ai?' ai-node':''}`}>
-                  {n.ai && <div className="ai-badge">AI</div>}
-                  <div className="flow-icon">{n.icon}</div>
-                  <div className="flow-label">{n.label}</div>
-                  <div className="flow-sub">{n.sub}</div>
+            {
+              icon:'🔍', ai:true, title:'Document Intelligence',
+              what:'What the AI does',
+              body:'Reads every inbound document — PDF, Word, email attachment — and pulls out every field that matters. Delivery dates, voltage ratings, LD clauses, payment terms, governing law. Regardless of how the document is formatted or where it came from.',
+              notAI:'Your team still decides what to do with the information.'
+            },
+            {
+              icon:'⚖️', ai:true, title:'Commercial Standards Check',
+              what:'What the AI does',
+              body:"Compares every extracted clause against S&C's commercial baseline — automatically. A 0.5%/week liquidated damages clause gets flagged the moment it's extracted. Not when someone eventually reads page 30.",
+              notAI:'Your legal and commercial team still own the decision to escalate or accept.'
+            },
+            {
+              icon:'📋', ai:true, title:'Salesforce Population',
+              what:'What the AI does',
+              body:'Every extracted field — product type, quantity, delivery, value, contact — is written into the Salesforce opportunity record on receipt. No re-keying. No transcription errors. The record is complete before anyone opens the email.',
+              notAI:'Your team still manages the opportunity and owns the relationship.'
+            },
+          ].map((card,i) => (
+            <div key={i} style={{
+              background:'white', border:'1px solid var(--border)',
+              borderRadius:'var(--radius)', padding:'22px',
+              boxShadow:'var(--shadow-sm)'
+            }}>
+              <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14}}>
+                <div style={{
+                  width:36,height:36,borderRadius:10,background:'var(--green-bg)',
+                  display:'flex',alignItems:'center',justifyContent:'center',fontSize:16,flexShrink:0
+                }}>{card.icon}</div>
+                <div>
+                  <div style={{fontSize:13,fontWeight:700,color:'var(--text)'}}>{card.title}</div>
+                  <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.07em',color:'var(--green)',marginTop:1}}>AI-powered</div>
                 </div>
               </div>
-              {i < arr.length-1 && <div className={`flow-arrow${n.ai?' brand':''}`}>→</div>}
-            </React.Fragment>
+              <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--text-muted)',marginBottom:6}}>{card.what}</div>
+              <div style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.65,marginBottom:12}}>{card.body}</div>
+              <div style={{fontSize:12,color:'var(--text-muted)',lineHeight:1.5,paddingTop:10,borderTop:'1px solid var(--border)'}}>
+                <span style={{fontWeight:600}}>Human in the loop: </span>{card.notAI}
+              </div>
+            </div>
           ))}
         </div>
       </div>
 
-      <div className="cover-features">
-        <div className="cover-feature">
-          <div className="feature-icon" style={{background:'var(--brand-light)'}}>📄</div>
-          <div className="feature-title">Universal Document Ingestion</div>
-          <div className="feature-body">Handles any format — PDFs, Word docs, scanned specs. No templates required. Trained to find what matters regardless of how the document is structured.</div>
+      {/* Explore CTA */}
+      <div style={{
+        background:'var(--text)', borderRadius:'var(--radius-lg)',
+        padding:'28px 32px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:24
+      }}>
+        <div>
+          <div style={{fontSize:18,fontWeight:800,color:'white',letterSpacing:-0.5,marginBottom:6}}>See it working on real S&C documents</div>
+          <div style={{fontSize:14,color:'rgba(255,255,255,0.55)',lineHeight:1.6}}>The Inbox tab shows three live inbound documents — an RFQ from Duke Energy, a data centre spec from NextEra, and a clean PO from Dominion. Click into each to see what the AI extracted and what it flagged.</div>
         </div>
-        <div className="cover-feature">
-          <div className="feature-icon" style={{background:'var(--red-bg)'}}>⚠️</div>
-          <div className="feature-title">Commercial Terms Review</div>
-          <div className="feature-body">Every inbound document is checked against S&C's standard T&C baseline. Liquidated damages, payment terms, warranty, governing law — flagged instantly.</div>
-        </div>
-        <div className="cover-feature">
-          <div className="feature-icon" style={{background:'var(--green-bg)'}}>⚡</div>
-          <div className="feature-title">Technical Spec Matching</div>
-          <div className="feature-body">Voltage ratings, fault levels, product configurations — cross-referenced against S&C's preferred design universe to identify non-standard requirements early.</div>
-        </div>
-        <div className="cover-feature">
-          <div className="feature-icon" style={{background:'var(--blue-bg)'}}>🔗</div>
-          <div className="feature-title">Salesforce Integration</div>
-          <div className="feature-body">Extracted data flows directly into Salesforce. No re-keying. Opportunity records created and populated automatically on receipt.</div>
-        </div>
-        <div className="cover-feature">
-          <div className="feature-icon" style={{background:'var(--amber-bg)'}}>💬</div>
-          <div className="feature-title">Proactive Alerts</div>
-          <div className="feature-body">The system comes to you. High-risk documents are flagged before anyone opens them — not after a salesperson has already responded.</div>
-        </div>
-        <div className="cover-feature">
-          <div className="feature-icon" style={{background:'var(--purple-bg)'}}>📊</div>
-          <div className="feature-title">Pipeline Visibility</div>
-          <div className="feature-body">Every inbound document tracked from receipt to quote. Commercial leadership sees where every opportunity is and what's blocking it.</div>
+        <div style={{display:'flex',gap:10,flexShrink:0}}>
+          <button onClick={()=>document.querySelector('[data-tab="Inbox"]')?.click()} style={{
+            padding:'11px 22px',background:'white',color:'var(--text)',border:'none',
+            borderRadius:'var(--radius-sm)',fontWeight:700,fontSize:14,fontFamily:'var(--font)',cursor:'pointer'
+          }} onClick={()=>setTab('Inbox')}>Open Inbox →</button>
         </div>
       </div>
 
-      <div style={{marginTop:32,padding:'20px 24px',background:'#FEF2F2',border:'1px solid rgba(230,51,41,0.15)',borderRadius:'var(--radius)',fontSize:13,color:'var(--text-secondary)',lineHeight:1.6}}>
-        <strong style={{color:'var(--brand)'}}>This is an indicative demo</strong> — built to illustrate what a Conquer AI solution could look like for S&C Electric's quote-to-contract process. All data is illustrative. The actual solution would be scoped, designed, and built with S&C's commercial and technical teams through a whiteboarding and pre-proposal process.
-      </div>
     </div>
   );
 }
@@ -712,7 +835,7 @@ function App() {
   return (
     <div>
       <Header tab={tab} setTab={setTab}/>
-      {tab==='Overview' && <Overview/>}
+      {tab==='Overview' && <Overview setTab={setTab}/>}
       {tab==='Inbox' && <Inbox/>}
       {tab==='Pipeline' && <Pipeline/>}
       {tab==='Ask AI' && <AskAI/>}
