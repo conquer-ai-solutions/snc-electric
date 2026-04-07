@@ -443,7 +443,7 @@ body {
   <div class="cs-col">
     <div class="cs-label">Account</div>
     <div class="cs-value">S&amp;C Electric</div>
-    <div class="cs-sub">Fortune 500 · Chicago · ETO manufacturer</div>
+    <div class="cs-sub">#1 US Medium Voltage Switch Gear · Chicago · $2B→$3B · ETO</div>
   </div>
   <div class="cs-col">
     <div class="cs-label">Session</div>
@@ -452,13 +452,13 @@ body {
   </div>
   <div class="cs-col">
     <div class="cs-label">S&amp;C in the room</div>
-    <div class="cs-value">Anders S · Anders H · Ernst · Joseph</div>
-    <div class="cs-sub">CEO · President · CTO · CPD</div>
+    <div class="cs-value">Anders S · Anders H · Ernst · Joseph · Stephanie</div>
+    <div class="cs-sub">CEO · President · CTO · CPD · SVP</div>
   </div>
   <div class="cs-col">
     <div class="cs-label">Conquer</div>
-    <div class="cs-value">David · Bolaji · Luke · Atlee</div>
-    <div class="cs-sub">All remote · Atlee is the relationship anchor</div>
+    <div class="cs-value">David · Bolaji · Luke (remote) · Atlee (in-person at S&amp;C)</div>
+    <div class="cs-sub">Atlee is the relationship anchor</div>
   </div>
 </div>
 
@@ -493,6 +493,10 @@ body {
         <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>T&amp;C or LD clause problems downstream</div>
         <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Salesforce mentioned as pain not solution</div>
         <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Spec review or terms review as bottleneck</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Preliminary engineering / front-end design mentioned</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Estimation or vendor sourcing as pain point</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Consulting engineer or contractor as entry point</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Profitability impact from front-end errors</div>
       </div>
 
       <div class="signals-section">
@@ -501,6 +505,8 @@ body {
         <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>"White piece of paper every time" — no reuse</div>
         <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Configurator frustration — too complex, clunky</div>
         <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Preferred design universe — standardise inside</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Basic configured vs. complex power distinction</div>
+        <div class="signal-chip" onclick="this.classList.toggle('tagged')"><span class="chip-dot"></span>Data centre / hospital / renewables driving variability</div>
       </div>
 
       <div class="signals-section">
@@ -522,7 +528,7 @@ e.g. 'We start with a white piece of paper every time' or 'by the time it hits m
     <div>
       <div class="sidebar-box accent">
         <div class="sb-accent-title">Opening move</div>
-        <div class="sb-accent-body">"Before we show you anything — since January, what's moved up the priority list? What are you actually trying to solve this year?" Then stop. Don't reference the prep. Let them re-set the agenda.</div>
+        <div class="sb-accent-body">"Before we show you anything — since January, what's moved up the priority list? Last time we spoke, quote-to-contract was the strongest fit. Is that still where the pain is, or has something else taken priority?" Then stop. Don't reference the prep. Let them re-set the agenda.</div>
       </div>
 
       <div class="sidebar-box">
@@ -531,7 +537,8 @@ e.g. 'We start with a white piece of paper every time' or 'by the time it hits m
           <div class="sb-item"><div class="sb-item-icon">🎯</div><div>The <strong>specific verb</strong> — not "quote process issues" but "someone manually reads every spec"</div></div>
           <div class="sb-item"><div class="sb-item-icon">🎯</div><div>Who speaks first — <strong>Joseph</strong> will frame commercially, <strong>Anders S</strong> will frame strategically, <strong>Ernst</strong> will push on tech</div></div>
           <div class="sb-item"><div class="sb-item-icon">🎯</div><div>Whether <strong>ETO configurator</strong> or <strong>quote-to-contract</strong> takes priority today</div></div>
-          <div class="sb-item"><div class="sb-item-icon">🎯</div><div>Any mention of <strong>data centre / switchgear demand</strong> — that's urgency context</div></div>
+          <div class="sb-item"><div class="sb-item-icon">🎯</div><div>Any mention of <strong>data centre / hospital / renewables demand</strong> — that's urgency context. Listen for the word <strong>estimation</strong> — it's where profitability lives or dies</div></div>
+          <div class="sb-item"><div class="sb-item-icon">🎯</div><div>Whether they distinguish between <strong>basic configured equipment</strong> and <strong>complex power</strong> — that tells you which bucket the real pain is in</div></div>
         </div>
       </div>
 
@@ -576,7 +583,7 @@ e.g. 'We start with a white piece of paper every time' or 'by the time it hits m
   <div class="probe-grid">
     <div class="probe-card" id="pc1">
       <div class="probe-num">Q1 — Quote-to-contract</div>
-      <div class="probe-q">Walk me through what happens from the moment a customer sends in a spec. Who touches it, where does it go, and where does it fall down?</div>
+      <div class="probe-q">Walk me through the full cycle — from when a consulting engineer first approaches you with preliminary ideas, through preliminary engineering and design, to the formal RFQ, spec changes, vendor sourcing, estimation, and quoting. Where in that chain does it fall down?</div>
       <div class="probe-intent">Gets the actual process on the table — not the idealised version. You need to know who reads the documents today, in what order, and where the gaps are.</div>
       <div class="probe-listen"><strong>Listen for:</strong> a specific person's name, a specific moment of manual work, the phrase "it depends" — that's where the AI opportunity lives.</div>
       <button class="probe-ask-btn" onclick="toggleAsked('pc1',this)">Mark as asked</button>
@@ -629,6 +636,8 @@ e.g. 'We start with a white piece of paper every time' or 'by the time it hits m
     <div class="pi-item"><em>"If you solved the commercial process problem — how much of the BOM/inventory issue would disappear on its own?"</em> — tests Joseph's upstream theory from January.</div>
     <div class="pi-item"><em>"Is the problem that you're building too many different designs — or that you're building the same design differently every time?"</em> — unlocks the ETO conversation cleanly.</div>
     <div class="pi-item"><em>"What's the consequence when a T&amp;C issue is caught after a quote is already in the customer's hands?"</em> — makes the commercial risk concrete.</div>
+    <div class="pi-item"><em>"When you're estimating a quote — pulling together vendor pricing, parts availability, lead times — how much of that is manual today?"</em> — surfaces the estimation problem directly.</div>
+    <div class="pi-item"><em>"The front end — from first contact to signed contract — if that's wrong, what does it cost you downstream?"</em> — connects profitability to front-end accuracy.</div>
   </div>
 
   <!-- TASHDE -->
@@ -652,7 +661,7 @@ e.g. 'We start with a white piece of paper every time' or 'by the time it hits m
             <div class="tashde-word">Triggers</div>
             <div class="tashde-ai-flag">Entry point</div>
           </div>
-          <div class="tashde-question">"What starts this process? Is it an email, a Salesforce record, a phone call — and is it always the same channel?"</div>
+          <div class="tashde-question">"What starts this process? We understand a consulting engineer or contractor typically approaches S&amp;C with preliminary ideas — is that right? Does it come through email, Salesforce, a broker? And is there always a preliminary engineering phase before the formal RFQ?"</div>
           <textarea class="tashde-input" data-tashde="T" placeholder="e.g. Customer emails spec PDF / comes through Salesforce / arrives via broker..." oninput="markFilled('tc-t',this)"></textarea>
         </div>
         <div class="tashde-card" id="tc-a">
@@ -753,7 +762,7 @@ e.g. 'We start with a white piece of paper every time' or 'by the time it hits m
       <div class="synth-tag quote-to-contract">Quote-to-contract</div>
       <div class="synth-concept">Unstructured data → structured commercial intelligence</div>
       <div class="synth-bridge">"What you're describing is exactly..."</div>
-      <div class="synth-body">Every inbound RFQ, spec, and PO is unstructured data. Someone on your team is doing a transformation — reading a 40-page document and turning it into a handful of structured decisions. That transformation is what AI does well, consistently, at scale, before anyone opens their inbox.</div>
+      <div class="synth-body">Every inbound RFQ, spec, and PO is unstructured data. Someone on your team is doing a transformation — reading a 40-page document, cross-referencing vendor pricing, checking terms against your configuration standards, and turning it into structured decisions. That transformation — from preliminary ideas through to a quotable position — is what AI does well, consistently, at scale, before anyone opens their inbox.</div>
       <div class="synth-earned"><strong>Only deploy if:</strong> they've described the manual reading process, mentioned document variety, or referenced humans in the loop between customer ask and quote.</div>
       <button class="deploy-btn" onclick="toggleDeployed('sc1',this)">Mark as deployed</button>
     </div>
@@ -826,7 +835,7 @@ e.g. 'We start with a white piece of paper every time' or 'by the time it hits m
     <div class="show-card primary">
       <div class="show-label">Primary · Lead with this</div>
       <div class="show-title">Indicative Demo — Quote-to-Contract AI</div>
-      <div class="show-body">Built specifically for S&C. Shows three real inbound documents — a Duke Energy RFQ, a NextEra data centre spec, an Dominion PO. AI has already read all three, extracted key fields, checked against commercial standards, and flagged issues. Joseph can see exactly what the Salesforce integration looks like.</div>
+      <div class="show-body">Built specifically for S&C's upstream commercial process. Shows three real inbound documents — a Duke Energy RFQ, a NextEra data centre spec, an Dominion PO. AI has already read all three, extracted key fields, checked against commercial standards, and flagged issues. Joseph can see exactly what the Salesforce integration looks like.</div>
       <a href="snc-demo.html" target="_blank" class="show-action-btn primary">Open Demo →</a>
       <div class="talking-points">
         <div class="tp-label">Talking points by document</div>
@@ -928,7 +937,7 @@ e.g. 'We start with a white piece of paper every time' or 'by the time it hits m
 
       <div class="commit-strip">
         <div class="commit-title">If cost or risk comes up here</div>
-        <div class="commit-body">Discovery at our risk. The pre-proposal is free. Phase 1 lives in our cloud — you don't need to provision anything. You see working software before you pay for anything. First engagement — no upfront cost.</div>
+        <div class="commit-body">Discovery at our risk. The pre-proposal is free. Phase 1 lives in our cloud — you don't need to provision anything. You see working software before you pay for anything. First engagement — no upfront cost. And to be specific about scope: we're talking about the front end — everything from preliminary engineering through to contract. Not the build, not the manufacturing. Just the upstream commercial process where information chaos is costing you profitability.</div>
       </div>
 
       <div class="rule-box" style="border-color:rgba(255,160,48,0.25); background:var(--amber-bg);">
@@ -968,7 +977,7 @@ e.g. 'We start with a white piece of paper every time' or 'by the time it hits m
       <div class="room-q" onclick="this.classList.toggle('asked')">
         <div class="room-q-num">01</div>
         <div>
-          <div class="room-q-text">Walk me through what happens from the moment a customer sends in a spec. Who touches it, where does it go, where does it fall down?</div>
+          <div class="room-q-text">Walk me through the full cycle — from consulting engineer approach, through preliminary engineering, RFQ, spec changes, estimation, to quote. Where does it fall down?</div>
           <div class="room-q-sub">→ Listen for a specific person's name and the moment of manual work</div>
         </div>
       </div>

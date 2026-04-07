@@ -8,44 +8,44 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --brand:   #E63329;
-  --brand-dk:#B52820;
-  --green:   #059669;
-  --red:     #DC2626;
-  --amber:   #D97706;
-  --purple:  #7C3AED;
-  --teal:    #0D9488;
-  --text-1:  #111111;
-  --text-2:  #555555;
-  --text-3:  #999999;
-  --border:  #E5E5E5;
-  --bg-alt:  #F7F7F6;
-  --nav-h:   48px;
+ --brand: #E63329;
+ --brand-dk:#B52820;
+ --green: #059669;
+ --red: #DC2626;
+ --amber: #D97706;
+ --purple: #7C3AED;
+ --teal: #0D9488;
+ --text-1: #111111;
+ --text-2: #555555;
+ --text-3: #999999;
+ --border: #E5E5E5;
+ --bg-alt: #F7F7F6;
+ --nav-h: 48px;
 }
 
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--text-1);
-  background: #fff;
+ font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+ font-size: 16px;
+ line-height: 1.7;
+ color: var(--text-1);
+ background: #fff;
 }
 
-/* ── NAV ── */
 nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: #fff;
-  border-bottom: 1px solid var(--border);
-  height: var(--nav-h);
-  display: flex;
-  align-items: center;
-  padding: 0 32px;
-  gap: 0;
+ position: sticky;
+ top: 0;
+ z-index: 100;
+ background: #fff;
+ border-bottom: 1px solid var(--border);
+ height: var(--nav-h);
+ display: flex;
+ align-items: center;
+ padding: 0 32px;
+ gap: 0;
 }
+
 .nav-logo { display: flex; align-items: center; gap: 7px; margin-right: 28px; flex-shrink: 0; text-decoration: none; }
 .nav-logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); }
 .nav-logo-text { font-size: 13px; font-weight: 700; color: var(--text-1); letter-spacing: -0.01em; }
@@ -57,14 +57,12 @@ nav {
 .nav-link.active { color: var(--text-1); border-bottom-color: var(--brand); font-weight: 600; }
 .nav-internal { margin-left: auto; flex-shrink: 0; background: var(--text-1); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 3px; }
 
-/* ── LAYOUT ── */
 .content-wrap { max-width: 900px; margin: 0 auto; padding: 0 40px; }
 .section { padding: 72px 0 80px; border-bottom: 1px solid var(--border); }
 .section.alt { background: var(--bg-alt); }
 .section.dark { background: var(--text-1); color: #fff; }
 .section.dark * { border-color: rgba(255,255,255,0.1); }
 
-/* ── TYPOGRAPHY ── */
 .section-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); margin-bottom: 16px; font-family: 'Courier New', monospace; }
 .section.dark .section-eyebrow { color: #6EE7B7; }
 .section-headline { font-size: 40px; font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; color: var(--text-1); margin-bottom: 12px; }
@@ -72,7 +70,6 @@ nav {
 .section-sub { font-size: 16px; color: var(--text-2); margin-bottom: 40px; max-width: 640px; }
 .section.dark .section-sub { color: rgba(255,255,255,0.55); }
 
-/* ── HERO ── */
 .hero { padding: 56px 0 64px; border-bottom: 1px solid var(--border); }
 .hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); font-family: 'Courier New', monospace; margin-bottom: 20px; }
 .hero-headline { font-size: 52px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; color: var(--text-1); margin-bottom: 14px; }
@@ -81,7 +78,6 @@ nav {
 .hero-meta-item { font-size: 13px; color: var(--text-3); }
 .hero-meta-item strong { color: var(--text-1); font-weight: 600; }
 
-/* ── INFO CARDS ── */
 .info-card { border: 1px solid var(--border); border-radius: 6px; padding: 24px 28px; margin-bottom: 12px; background: #fff; }
 .info-card-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); font-family: 'Courier New', monospace; margin-bottom: 12px; }
 .info-card-label.red { color: var(--red); }
@@ -92,7 +88,6 @@ nav {
 .info-card p:last-child { margin-bottom: 0; }
 .info-card p em { font-style: italic; color: var(--green); }
 
-/* ── HOOK / WATCH-OUT BLOCKS ── */
 .hook-block { border: 1px solid var(--border); border-radius: 6px; padding: 18px 22px; margin-bottom: 8px; font-size: 14px; line-height: 1.65; background: #fff; }
 .hook-block .hook-label { font-weight: 800; color: var(--text-1); display: block; margin-bottom: 5px; }
 .hook-block.warn { border-left: 3px solid var(--amber); }
@@ -104,18 +99,17 @@ nav {
 .hook-block.info { border-left: 3px solid var(--brand); }
 .hook-block.info .hook-label { color: var(--brand); }
 
-/* ── ACCORDION ── */
 .accordion { border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; overflow: hidden; }
 .accordion-trigger { display: flex; align-items: center; gap: 12px; padding: 14px 20px; cursor: pointer; background: #fff; border: none; width: 100%; text-align: left; font-size: 14px; font-weight: 600; color: var(--text-1); transition: background 0.1s; }
 .accordion-trigger:hover { background: var(--bg-alt); }
 .accordion-arrow { font-size: 10px; color: var(--text-3); transition: transform 0.15s; flex-shrink: 0; margin-left: auto; }
 .accordion-arrow.open { transform: rotate(90deg); }
 .acc-type { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; flex-shrink: 0; font-family: 'Courier New', monospace; }
-.acc-type.ask      { background: #ECFDF5; color: var(--green); }
-.acc-type.show     { background: #FEF2F2; color: var(--brand); }
-.acc-type.deep     { background: #F5F3FF; color: var(--purple); }
+.acc-type.ask { background: #ECFDF5; color: var(--green); }
+.acc-type.show { background: #FEF2F2; color: var(--brand); }
+.acc-type.deep { background: #F5F3FF; color: var(--purple); }
 .acc-type.critical { background: #FEF2F2; color: var(--red); }
-.acc-type.warn     { background: #FFFBEB; color: var(--amber); }
+.acc-type.warn { background: #FFFBEB; color: var(--amber); }
 .accordion-body { padding: 20px 24px; border-top: 1px solid var(--border); background: #fff; display: none; font-size: 14px; color: var(--text-2); line-height: 1.7; }
 .accordion-body.open { display: block; }
 .accordion-body p { margin-bottom: 10px; }
@@ -124,7 +118,6 @@ nav {
 .accordion-body ul { margin: 8px 0 10px 18px; }
 .accordion-body li { margin-bottom: 6px; }
 
-/* ── PEOPLE GRID ── */
 .people-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 @media (min-width: 700px) { .people-grid { grid-template-columns: repeat(4, 1fr); } }
 .person-card { border: 1px solid var(--border); border-radius: 6px; padding: 18px 20px; background: #fff; }
@@ -136,7 +129,6 @@ nav {
 .person-role.brand { color: var(--brand); }
 .person-body { font-size: 12px; color: var(--text-2); line-height: 1.6; }
 
-/* ── STAT STRIP ── */
 .stat-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
 .stat-cell { padding: 20px 18px; border-right: 1px solid var(--border); text-align: center; }
 .stat-cell:last-child { border-right: none; }
@@ -146,7 +138,6 @@ nav {
 .stat-num.brand { color: var(--brand); }
 .stat-lbl { font-size: 11px; color: var(--text-2); font-weight: 500; }
 
-/* ── OPPORTUNITY CARDS ── */
 .opp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
 .opp-card { border: 1px solid var(--border); border-radius: 6px; padding: 24px 28px; background: #fff; }
 .opp-card-num { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); font-family: 'Courier New', monospace; margin-bottom: 8px; }
@@ -156,11 +147,9 @@ nav {
 .opp-card.primary { border-color: var(--brand); border-width: 2px; }
 .opp-card.primary .opp-card-num { color: var(--brand); }
 
-/* ── BLOCKQUOTE ── */
 blockquote { border-left: 3px solid var(--brand); padding: 12px 20px; margin: 16px 0; background: #FAFAFA; font-size: 14px; color: var(--text-2); font-style: italic; border-radius: 0 6px 6px 0; }
 blockquote cite { display: block; margin-top: 8px; font-size: 12px; color: var(--text-3); font-style: normal; font-weight: 600; }
 
-/* ── TIMELINE ── */
 .timeline { display: flex; flex-direction: column; gap: 0; }
 .tl-item { display: flex; gap: 20px; padding-bottom: 28px; position: relative; }
 .tl-item:last-child { padding-bottom: 0; }
@@ -175,7 +164,6 @@ blockquote cite { display: block; margin-top: 8px; font-size: 12px; color: var(-
 .tl-title { font-size: 14px; font-weight: 700; color: var(--text-1); margin-bottom: 4px; }
 .tl-body { font-size: 13px; color: var(--text-2); line-height: 1.6; }
 
-/* ── STAIRCASE TABLE ── */
 .staircase { width: 100%; border-collapse: collapse; font-size: 14px; }
 .staircase th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); border-bottom: 1px solid var(--border); }
 .staircase td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
@@ -186,434 +174,440 @@ blockquote cite { display: block; margin-top: 8px; font-size: 12px; color: var(-
 .phase-badge.p2 { background: #ECFDF5; color: var(--green); }
 .phase-badge.disc { background: #FEF2F2; color: var(--brand); }
 
-/* ── FOOTER ── */
 footer { padding: 40px; text-align: center; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-3); }
 footer strong { color: var(--text-2); }
 </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
 <nav>
-  <a class="nav-logo" href="#">
-    <div class="nav-logo-dot"></div>
-    <span class="nav-logo-text">Conquer AI</span>
-  </a>
-  <div class="nav-divider"></div>
-  <div class="nav-links">
-    <a class="nav-link active" href="#account">Account</a>
-    <a class="nav-link" href="#room">The Room</a>
-    <a class="nav-link" href="#use-cases">Use Cases</a>
-    <a class="nav-link" href="#playbook">Whiteboard Playbook</a>
-    <a class="nav-link" href="#watchouts">Watch-Outs</a>
-    <a class="nav-link" href="#history">History</a>
-  </div>
-  <a href="snc-session.html" target="_blank" style="margin-left:8px;flex-shrink:0;background:var(--text-1);color:#fff;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:6px 14px;border-radius:4px;text-decoration:none;">Session Runner →</a>
-  <a href="snc-demo.html" target="_blank" style="margin-left:6px;flex-shrink:0;background:var(--brand);color:#fff;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:6px 14px;border-radius:4px;text-decoration:none;">View Demo →</a>
-  <div class="nav-internal">Internal · Confidential</div>
+ <a class="nav-logo" href="#">
+ <div class="nav-logo-dot"></div>
+ <span class="nav-logo-text">Conquer AI</span>
+ </a>
+ <div class="nav-divider"></div>
+ <div class="nav-links">
+ <a class="nav-link active" href="#account">Account</a>
+ <a class="nav-link" href="#room">The Room</a>
+ <a class="nav-link" href="#use-cases">Use Cases</a>
+ <a class="nav-link" href="#playbook">Whiteboard Playbook</a>
+ <a class="nav-link" href="#watchouts">Watch-Outs</a>
+ <a class="nav-link" href="#history">History</a>
+ </div>
+ <a href="snc-session.html" target="_blank" style="margin-left:8px;flex-shrink:0;background:var(--text-1);color:#fff;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:6px 14px;border-radius:4px;text-decoration:none;">Session Runner →</a>
+ <a href="snc-demo.html" target="_blank" style="margin-left:6px;flex-shrink:0;background:var(--brand);color:#fff;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:6px 14px;border-radius:4px;text-decoration:none;">View Demo →</a>
+ <div class="nav-internal">Internal · Confidential</div>
 </nav>
 
-<!-- ── HERO ── -->
 <div class="section" id="top">
-  <div class="content-wrap">
-    <div class="hero">
-      <div class="hero-eyebrow">Whiteboard Prep · Tue 7 April 2026 · 7:00 – 8:30 pm UK</div>
-      <h1 class="hero-headline">S&amp;C Electric</h1>
-      <p class="hero-sub">Our first real shot at the room. This took five months to schedule. Don't waste it — come in with a point of view on quote-to-contract ETO, and let them talk.</p>
-      <div class="hero-meta">
-        <div class="hero-meta-item"><strong>Location</strong> Chicago (S&amp;C in-person · Conquer remote)</div>
-        <div class="hero-meta-item"><strong>Format</strong> Video call · 90 mins</div>
-        <div class="hero-meta-item"><strong>Conquer</strong> David, Bolaji, Luke, Atlee (all remote)</div>
-        <div class="hero-meta-item"><strong>Prep Call</strong> Mon 6 Apr · 7 pm UK</div>
-      </div>
-    </div>
-  </div>
+ <div class="content-wrap">
+ <div class="hero">
+ <div class="hero-eyebrow">Whiteboard Prep · Tue 7 April 2026 · 7:00 – 8:30 pm UK</div>
+ <h1 class="hero-headline">S&amp;C Electric</h1>
+ <p class="hero-sub">Our first real shot at the room. This took five months to schedule. Don't waste it — come in with a point of view on quote-to-contract ETO, and let them talk.</p>
+ <div class="hero-meta">
+ <div class="hero-meta-item"><strong>Location</strong> Chicago (S&amp;C in-person · Atlee in-person · Conquer remote)</div>
+ <div class="hero-meta-item"><strong>Format</strong> Hybrid · 90 mins</div>
+ <div class="hero-meta-item"><strong>Conquer</strong> David, Bolaji, Luke (remote) · Atlee (in-person at S&amp;C)</div>
+ <div class="hero-meta-item"><strong>Prep Call</strong> Mon 6 Apr · 7 pm UK</div>
+ </div>
+ </div>
+ </div>
 </div>
 
-<!-- ── ACCOUNT ── -->
 <div class="section" id="account">
-  <div class="content-wrap">
-    <div class="section-eyebrow">Account Overview</div>
-    <h2 class="section-headline">Who is S&amp;C Electric?</h2>
-    <p class="section-sub">100-year-old manufacturer and supplier of power distribution and switching equipment. Critical infrastructure for utilities and data centres across North America.</p>
+ <div class="content-wrap">
+ <div class="section-eyebrow">Account Overview</div>
+ <h2 class="section-headline">Who is S&amp;C Electric?</h2>
+ <p class="section-sub">100-year-old manufacturer and the #1 player in medium voltage switch gear in the United States. Critical infrastructure for data centres, utilities, hospitals, and renewable energy grid interconnection across North America and beyond.</p>
 
-    <div class="stat-strip">
-      <div class="stat-cell">
-        <div class="stat-num brand">5,000+</div>
-        <div class="stat-lbl">Employees</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-num">F500</div>
-        <div class="stat-lbl">Fortune 500 / Major Listed</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-num green">Chicago</div>
-        <div class="stat-lbl">HQ</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-num amber">ETO</div>
-        <div class="stat-lbl">Core Product Model</div>
-      </div>
-    </div>
+ <div class="stat-strip">
+ <div class="stat-cell">
+ <div class="stat-num brand">5,000+</div>
+ <div class="stat-lbl">Employees</div>
+ </div>
+ <div class="stat-cell">
+ <div class="stat-num green">$2B→3B</div>
+ <div class="stat-lbl">Revenue (Rapid Growth)</div>
+ </div>
+ <div class="stat-cell">
+ <div class="stat-num green">Chicago</div>
+ <div class="stat-lbl">HQ</div>
+ </div>
+ <div class="stat-cell">
+ <div class="stat-num amber">ETO</div>
+ <div class="stat-lbl">Core Product Model</div>
+ </div>
+ </div>
 
-    <div class="info-card" style="margin-top:28px;">
-      <div class="info-card-label">Why they matter right now</div>
-      <p>S&amp;C makes the switchgear that powers AI data centres. Anders literally said it in the intro call: <em>"the product I referred to is the preferred one here in North America to power up AI data centres."</em> This is a company riding a massive tailwind. They have money, they have urgency, and their internal processes are visibly creaking under the growth. That's our window.</p>
-    </div>
+ <div class="info-card" style="margin-top:28px;">
+ <div class="info-card-label">Why they matter right now</div>
+ <p>S&amp;C is the #1 name in medium voltage switch gear — the critical equipment that goes into AI data centres, hospitals, utility substations, and renewable energy interconnection points. Their order book is at record levels driven by the data centre buildout for AI. Revenue is tracking from $2B toward $3B. They have money, they have urgency, and their internal processes are visibly creaking under the growth. That's our window.</p>
+ </div>
 
-    <div class="info-card">
-      <div class="info-card-label">How the intro came about</div>
-      <p>Atlee Valentine Pope (advisor) made the connection. She knows Anders Sjoelin personally from his time running Blue Canyon, and she knows two of their board members. Anders's first words on the January call were about how much he trusts Atlee. That warm-up is real capital — don't waste it by being too salesy.</p>
-    </div>
-  </div>
+ <div class="info-card">
+ <div class="info-card-label">What they actually make</div>
+ <p>Medium voltage switch gear is S&amp;C's flagship product line. Every data centre, every microgrid, every hospital, every solar-to-grid interconnection needs it. These are large, complex, engineered-to-order pieces of equipment — not commodities. Every customer project has different specs, different configurations, different engineering requirements. Two buckets matter here: <strong>basic configured equipment</strong> (standard configurator-driven) and <strong>complex power equipment</strong> (data centres, high-end facilities). The complex side is where the explosive growth is — and where the process pain is worst.</p>
+ </div>
+
+ <div class="info-card">
+ <div class="info-card-label">How the intro came about</div>
+ <p>Atlee Valentine Pope (advisor) made the connection. She knows Anders Sjoelin personally from his time running Blue Canyon, and she knows two of their board members. Anders's first words on the January call were about how much he trusts Atlee. That warm-up is real capital — don't waste it by being too salesy.</p>
+ </div>
+ </div>
 </div>
 
-<!-- ── THE ROOM ── -->
 <div class="section alt" id="room">
-  <div class="content-wrap">
-    <div class="section-eyebrow">The Room</div>
-    <h2 class="section-headline">Who's in the room</h2>
-    <p class="section-sub">All four of S&amp;C's top execs confirmed. This is a full C-suite session — treat it that way.</p>
+ <div class="content-wrap">
+ <div class="section-eyebrow">The Room</div>
+ <h2 class="section-headline">Who's in the room</h2>
+ <p class="section-sub">All four of S&amp;C's top execs confirmed. This is a full C-suite session — treat it that way.</p>
 
-    <div class="people-grid" style="grid-template-columns: repeat(2,1fr); gap: 10px; margin-bottom: 28px;">
-      <div class="person-card">
-        <div class="person-avatar brand">AS</div>
-        <div class="person-name">Anders Sjoelin</div>
-        <div class="person-role brand">CEO &amp; President</div>
-        <div class="person-body">The relationship. Warm to David and Tom post-intro call. Thinks in 30-year industry cycles. Led the ETO configurator discussion and is personally invested in the "standardised inside, customised outside" problem. Engage him on vision, not mechanics.</div>
-      </div>
-      <div class="person-card">
-        <div class="person-avatar">AH</div>
-        <div class="person-name">Anders Hultberg</div>
-        <div class="person-role">President &amp; COO</div>
-        <div class="person-body">Swedish. Runs operations and Canada. Cares about flow and consistency. Raised the inventory / BOM / ERP (Oracle) problem. <strong>Cares deeply that quote-to-contract is done right</strong> — "if it's not done right, I pay the price." Don't mistake his calm face for disengagement; he's tracking everything.</div>
-      </div>
-      <div class="person-card">
-        <div class="person-avatar">ES</div>
-        <div class="person-name">Ernst Scholtz</div>
-        <div class="person-role amber">CTO</div>
-        <div class="person-body">South African. Sharp technical instincts. Pushed on build-vs-buy and ERP integration on the last call. Asked whether we check for existing tools first — good sign. He'll be the one stress-testing the feasibility of anything we propose. Have answers ready.</div>
-      </div>
-      <div class="person-card">
-        <div class="person-avatar">JM</div>
-        <div class="person-name">Joseph Matamoros</div>
-        <div class="person-role">CPD — Product Dev</div>
-        <div class="person-body">The pragmatist in the room. He's the one who landed on quote-to-contract as the priority and closed the intro call on it. Thinks about technology stack fit (Salesforce + M365 + Copilot). Will be an ally if we're specific and grounded. Don't over-sell to him.</div>
-      </div>
-    </div>
+ <div class="people-grid" style="grid-template-columns: repeat(2,1fr); gap: 10px; margin-bottom: 28px;">
+ <div class="person-card">
+ <div class="person-avatar brand">AS</div>
+ <div class="person-name">Anders Sjoelin</div>
+ <div class="person-role brand">CEO &amp; President</div>
+ <div class="person-body">The relationship. Warm to David and Tom post-intro call. Thinks in 30-year industry cycles. Led the ETO configurator discussion and is personally invested in the "standardised inside, customised outside" problem. Engage him on vision, not mechanics.</div>
+ </div>
+ <div class="person-card">
+ <div class="person-avatar">AH</div>
+ <div class="person-name">Anders Hultberg</div>
+ <div class="person-role">President &amp; COO</div>
+ <div class="person-body">Swedish. Runs operations and Canada. Cares about flow and consistency. Raised the inventory / BOM / ERP (Oracle) problem. <strong>Cares deeply that quote-to-contract is done right</strong> — "if it's not done right, I pay the price." Don't mistake his calm face for disengagement; he's tracking everything.</div>
+ </div>
+ <div class="person-card">
+ <div class="person-avatar">ES</div>
+ <div class="person-name">Ernst Scholtz</div>
+ <div class="person-role amber">CTO</div>
+ <div class="person-body">South African. Sharp technical instincts. Pushed on build-vs-buy and ERP integration on the last call. Asked whether we check for existing tools first — good sign. He'll be the one stress-testing the feasibility of anything we propose. Have answers ready.</div>
+ </div>
+ <div class="person-card">
+ <div class="person-avatar">JM</div>
+ <div class="person-name">Joseph Matamoros</div>
+ <div class="person-role">CPD — Product Dev</div>
+ <div class="person-body">The pragmatist in the room. He's the one who landed on quote-to-contract as the priority and closed the intro call on it. Thinks about technology stack fit (Salesforce + M365 + Copilot). Will be an ally if we're specific and grounded. Don't over-sell to him.</div>
+ </div>
+ <div class="person-card">
+ <div class="person-avatar">SP</div>
+ <div class="person-name">Stephanie Pine</div>
+ <div class="person-role">Role TBC</div>
+ <div class="person-body">Added to the invite but role not yet confirmed. May be a recent addition to Anders's leadership team or involved in one of the processes under discussion. Listen for her contributions — she could be the operational counterpart we need for the pre-proposal review.</div>
+ </div>
+ </div>
 
-    <div class="info-card">
-      <div class="info-card-label brand">Conquer on the call</div>
-      <p><strong>David</strong> — leading. <strong>Bolaji</strong> — using a prior POC as an analogue to make the use case concrete (see Use Cases section). <strong>Luke</strong> — supporting. <strong>Atlee</strong> — our most important asset in the room. All joining remotely. Tom is not on this call.</p>
-    </div>
-  </div>
+ <div class="info-card">
+ <div class="info-card-label brand">Conquer on the call</div>
+ <p><strong>David</strong> — leading (remote). <strong>Bolaji</strong> — using a prior POC as an analogue to make the use case concrete (remote). <strong>Luke</strong> — supporting (remote). <strong>Atlee</strong> — in-person at S&amp;C's Chicago office. Our most important asset in the room. Tom is not on this call.</p>
+ </div>
+ </div>
 </div>
 
-<!-- ── USE CASES ── -->
 <div class="section" id="use-cases">
-  <div class="content-wrap">
-    <div class="section-eyebrow">Use Cases</div>
-    <h2 class="section-headline">What they actually care about</h2>
-    <p class="section-sub">Three distinct problems surfaced in the intro call. One is the clear entry point. The other two are real but need more discovery before we can land them.</p>
+ <div class="content-wrap">
+ <div class="section-eyebrow">Use Cases</div>
+ <h2 class="section-headline">What they actually care about</h2>
+ <p class="section-sub">Three distinct problems surfaced in the intro call. One is the clear entry point. The other two are real but need more discovery before we can land them.</p>
 
-    <div class="opp-grid">
-      <div class="opp-card primary" style="grid-column: 1 / -1;">
-        <div class="opp-card-num">Priority · Use Case 01</div>
-        <div class="opp-card-title">Quote-to-Contract — Upstream Commercial Process</div>
-        <div class="opp-card-body">
-          <p>Joseph named this explicitly as the best technology–problem fit on the January call. S&amp;C put a human (or set of humans) between the customer ask and the purchase order. Customers send in specs and terms and conditions through Salesforce — huge variety, lots of manual review, lots of gap risk.</p>
-          <p style="margin-top:8px;"><strong>The opportunity:</strong> T&amp;C review against spec. Classifying and extracting from inbound commercial documents. Flagging non-standard terms. Generating draft responses. All of it running through their existing M365 / Salesforce stack. This is close to what we showed them in the FI demo and it landed.</p>
-          <p style="margin-top:8px;"><strong>The analogue:</strong> Bolaji will reference a prior Conquer POC built for a greenhouse technology manufacturer — a company that also receives highly varied inbound commercial documents and needs to extract, validate, and match them against internal standards. Same pattern, different industry. Bolaji to present this unbranded as a worked example of what the solution could look like for S&amp;C.</p>
-        </div>
-      </div>
+ <div class="opp-grid">
+ <div class="opp-card primary" style="grid-column: 1 / -1;">
+ <div class="opp-card-num">Priority · Use Case 01</div>
+ <div class="opp-card-title">Quote-to-Contract — Upstream Commercial Process</div>
+ <div class="opp-card-body">
+ <p>Joseph named this explicitly as the best technology–problem fit on the January call. The actual process runs deeper than we originally understood. It starts with a <strong>consulting engineer or contractor</strong> approaching S&amp;C with preliminary ideas for a project (data centre, hospital, grid upgrade). This triggers a <strong>preliminary engineering &amp; design</strong> phase — back-and-forth between S&amp;C and the customer's engineer. From there it moves to a formal <strong>request for quote with specs</strong>, then into rounds of <strong>spec changes, vendor sourcing, and estimation</strong> before a quote is issued. The contract closes the loop. Our scope is this entire front end — everything before the actual build begins.</p>
+ <p style="margin-top:8px;"><strong>The opportunity:</strong> T&amp;C review against spec. Classifying and extracting from inbound commercial documents. Flagging non-standard terms. Generating draft responses. Estimation support — helping S&amp;C estimate what to quote by pulling vendor and parts intelligence. All of it running through their existing M365 / Salesforce stack. If the front end is wrong, profitability drops by hundreds of basis points downstream — that's the business case.</p>
+ <p style="margin-top:8px;"><strong>The analogue:</strong> Bolaji will reference a prior Conquer POC built for a greenhouse technology manufacturer — a company that also receives highly varied inbound commercial documents and needs to extract, validate, and match them against internal standards. Same pattern, different industry. Bolaji to present this unbranded as a worked example of what the solution could look like for S&amp;C.</p>
+ </div>
+ </div>
 
-      <div class="opp-card">
-        <div class="opp-card-num">Use Case 02</div>
-        <div class="opp-card-title">ETO Configurator &amp; Design Optimisation</div>
-        <div class="opp-card-body">
-          <p>Anders S's personal obsession. S&amp;C build engineer-to-order switchgear with billions of variants. Two engineers given the same spec produce two completely different designs. Both valid. One preferred. No way to search prior designs. They start with a white piece of paper every time.</p>
-          <p style="margin-top:8px;"><strong>The angle:</strong> Not design generation — narrowing the solution space. Joseph reframed it well: validation of requirements against design. Can AI flag when a proposed design is outside S&amp;C's preferred universe? That's the tractable version. We've done something similar (NDA-limited on the specifics).</p>
-          <p style="margin-top:8px;"><strong>Be honest:</strong> This is genuinely hard and we don't have a complete answer yet. The whiteboard is the right place to explore it — say that directly.</p>
-        </div>
-      </div>
+ <div class="opp-card">
+ <div class="opp-card-num">Use Case 02</div>
+ <div class="opp-card-title">ETO Configurator &amp; Design Optimisation</div>
+ <div class="opp-card-body">
+ <p>Anders S's personal obsession. S&amp;C build engineer-to-order medium voltage switch gear with billions of variants across two buckets: <strong>basic configured equipment</strong> (standard configurator-driven) and <strong>complex power equipment</strong> (data centres, high-spec facilities). Two engineers given the same spec produce two completely different designs. Both valid. One preferred. No way to search prior designs. They start with a white piece of paper every time. The configurator is clunky — it can't handle the variability driven by the explosion in data centre and complex power demand.</p>
+ <p style="margin-top:8px;"><strong>The angle:</strong> Not design generation — narrowing the solution space. Joseph reframed it well: validation of requirements against design. Can AI flag when a proposed design is outside S&amp;C's preferred universe? That's the tractable version. We've done something similar (NDA-limited on the specifics).</p>
+ <p style="margin-top:8px;"><strong>Be honest:</strong> This is genuinely hard and we don't have a complete answer yet. The whiteboard is the right place to explore it — say that directly.</p>
+ </div>
+ </div>
 
-      <div class="opp-card">
-        <div class="opp-card-num">Use Case 03</div>
-        <div class="opp-card-title">Inventory / BOM / ERP Intelligence</div>
-        <div class="opp-card-body">
-          <p>Anders H's concern. Mismatched inventory tracing back to bill of materials errors. Oracle ERP. Millions of data points. SKU intelligence. The symptom is financial — a number in the wrong place on the balance sheet — but the root cause is upstream language problems: drawing revisions, supplier changes, unlinked process steps.</p>
-          <p style="margin-top:8px;"><strong>Our position:</strong> This is traditional AI / data science territory, not our core. We were honest about that on the intro call. Don't walk it back now. The positioning is: the visible problem is mathematical, but upstream language issues are causing it, and <em>that's</em> where we can help. Use Case 01 is the wedge into this longer-term.</p>
-        </div>
-      </div>
-    </div>
+ <div class="opp-card">
+ <div class="opp-card-num">Use Case 03</div>
+ <div class="opp-card-title">Inventory / BOM / ERP Intelligence</div>
+ <div class="opp-card-body">
+ <p>Anders H's concern. Mismatched inventory tracing back to bill of materials errors. Oracle ERP. Millions of data points. SKU intelligence. The symptom is financial — a number in the wrong place on the balance sheet — but the root cause is upstream language problems: drawing revisions, supplier changes, unlinked process steps.</p>
+ <p style="margin-top:8px;"><strong>Our position:</strong> This is traditional AI / data science territory, not our core. We were honest about that on the intro call. Don't walk it back now. The positioning is: the visible problem is mathematical, but upstream language issues are causing it, and <em>that's</em> where we can help. Use Case 01 is the wedge into this longer-term.</p>
+ </div>
+ </div>
+ </div>
 
-    <blockquote>
-      "Where I think there's the clearest technology-plus-problem fit — it's the quote-to-contract cycle. Terms and conditions review versus spec review. There's so much variety in how that comes through Salesforce, with a lot of humans involved."
-      <cite>— Joseph Matamoros, January 30 intro call</cite>
-    </blockquote>
-  </div>
+ <blockquote>
+ "Where I think there's the clearest technology-plus-problem fit — it's the quote-to-contract cycle. Terms and conditions review versus spec review."
+ <cite>— Joseph Matamoros, January 30 intro call</cite>
+ </blockquote>
+ </div>
 </div>
 
-<!-- ── PLAYBOOK ── -->
 <div class="section alt" id="playbook">
-  <div class="content-wrap">
-    <div class="section-eyebrow">Whiteboard Playbook</div>
-    <h2 class="section-headline">How to run this session</h2>
-    <p class="section-sub">90 minutes. Don't fill it. The best whiteboard sessions are the ones where the client talks more than us.</p>
+ <div class="content-wrap">
+ <div class="section-eyebrow">Whiteboard Playbook</div>
+ <h2 class="section-headline">How to run this session</h2>
+ <p class="section-sub">90 minutes. Don't fill it. The best whiteboard sessions are the ones where the client talks more than us.</p>
 
-    <div class="accordion">
-      <button class="accordion-trigger" onclick="toggle(this)">
-        <span class="acc-type show">Open</span>
-        Opening — first 10 minutes
-        <span class="accordion-arrow">▶</span>
-      </button>
-      <div class="accordion-body">
-        <p>Don't re-pitch. They know who we are. A quick "thank you for making this happen, we know it took a while to find the slot" acknowledges the effort without dwelling on it. Then hand it to them: <strong>"We've done our homework on what you told us in January. Before we go through our thinking, has anything changed on your side since then?"</strong></p>
-        <p>This does three things: it shows we listened, it gives them space to redirect if priorities have shifted, and it starts the session with them talking, not us.</p>
-      </div>
-    </div>
+ <div class="accordion">
+ <button class="accordion-trigger" onclick="toggle(this)">
+ <span class="acc-type show">Open</span>
+ Opening — first 10 minutes
+ <span class="accordion-arrow">▶</span>
+ </button>
+ <div class="accordion-body">
+ <p>Don't re-pitch. They know who we are. A quick "thank you for making this happen, we know it took a while to find the slot" acknowledges the effort without dwelling on it. Then hand it to them: <strong>"We've done our homework on what you told us in January. Before we go through our thinking, has anything changed on your side since then?"</strong></p>
+ <p>This does three things: it shows we listened, it gives them space to redirect if priorities have shifted, and it starts the session with them talking, not us.</p>
+ </div>
+ </div>
 
-    <div class="accordion">
-      <button class="accordion-trigger" onclick="toggle(this)">
-        <span class="acc-type ask">Ask</span>
-        The questions we need answered
-        <span class="accordion-arrow">▶</span>
-      </button>
-      <div class="accordion-body">
-        <p>These are the things we don't have enough of yet:</p>
-        <ul>
-          <li><strong>On quote-to-contract:</strong> Walk me through what happens from the moment a customer sends in a spec. Who touches it? Where does it go? Where do things fall down most often? What does "getting it wrong" actually look like?</li>
-          <li><strong>On the configurator:</strong> What does "preferred design" mean in practice — is there a written standard somewhere, or is it tribal knowledge? How many people currently make that call?</li>
-          <li><strong>On ERP / inventory:</strong> When you say the BOM is the upstream problem — can you give me a concrete example of the last time this burned you?</li>
-          <li><strong>On technology:</strong> Beyond Salesforce and M365 — what does the tech landscape look like around the commercial process? Is there any internal AI already touching this?</li>
-          <li><strong>On urgency:</strong> If this is still a priority, what would "good" look like by end of year?</li>
-        </ul>
-      </div>
-    </div>
+ <div class="accordion">
+ <button class="accordion-trigger" onclick="toggle(this)">
+ <span class="acc-type ask">Ask</span>
+ The questions we need answered
+ <span class="accordion-arrow">▶</span>
+ </button>
+ <div class="accordion-body">
+ <p>These are the things we don't have enough of yet:</p>
+ <ul>
+ <li><strong>On quote-to-contract:</strong> Walk me through the full cycle — from the moment a consulting engineer first approaches you with preliminary ideas, through to a signed contract. We understand there's a preliminary engineering &amp; design phase, then a formal RFQ, then spec changes and vendor sourcing, then estimation and quoting. Where in that chain do things fall down most often? What does "getting it wrong" actually cost you?</li>
+ <li><strong>On the configurator:</strong> What does "preferred design" mean in practice — is there a written standard somewhere, or is it tribal knowledge? How many people currently make that call?</li>
+ <li><strong>On ERP / inventory:</strong> When you say the BOM is the upstream problem — can you give me a concrete example of the last time this burned you?</li>
+ <li><strong>On technology:</strong> Beyond Salesforce and M365 — what does the tech landscape look like around the commercial process? Is there any internal AI already touching this?</li>
+ <li><strong>On estimation:</strong> When you're estimating a quote — pulling together vendor pricing, parts, lead times — how much of that is manual today? Where does the estimation process break down?</li>
+ <li><strong>On urgency:</strong> If this is still a priority, what would "good" look like by end of year?</li>
+ </ul>
+ </div>
+ </div>
 
-    <div class="accordion">
-      <button class="accordion-trigger" onclick="toggle(this)">
-        <span class="acc-type show">Show</span>
-        What to show — and what not to
-        <span class="accordion-arrow">▶</span>
-      </button>
-      <div class="accordion-body">
-        <p><strong>Show:</strong> The prior greenhouse technology POC (unbranded, Bolaji's play). This is the closest analogue to the quote-to-contract problem — document ingestion, extraction, matching against a standard. Make it concrete, make it fast, don't over-explain it.</p>
-        <p><strong>Don't show:</strong> The FI demo again unless they ask. We already showed it in January. Repeating it signals we haven't moved on from discovery.</p>
-        <p><strong>Draw on the whiteboard:</strong> The before/after of their current quote-to-contract flow as we understand it. Then the version with AI in it. Let them correct us. The corrections are the signal we need.</p>
-        <div style="margin-top:16px;padding:14px 18px;background:var(--bg-alt);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
-          <div>
-            <div style="font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:3px;">Indicative demo available</div>
-            <div style="font-size:13px;color:var(--text-2);">A working prototype showing what the quote-to-contract AI could look like for S&amp;C — inbox, extraction, flags, pipeline view, and live AI chat.</div>
-          </div>
-          <a href="snc-demo.html" target="_blank" style="flex-shrink:0;background:var(--brand);color:#fff;font-size:13px;font-weight:700;padding:10px 18px;border-radius:5px;text-decoration:none;white-space:nowrap;">Open Demo →</a>
-        </div>
-      </div>
-    </div>
+ <div class="accordion">
+ <button class="accordion-trigger" onclick="toggle(this)">
+ <span class="acc-type show">Show</span>
+ What to show — and what not to
+ <span class="accordion-arrow">▶</span>
+ </button>
+ <div class="accordion-body">
+ <p><strong>Show:</strong> The prior greenhouse technology POC (unbranded, Bolaji's play). This is the closest analogue to the quote-to-contract problem — document ingestion, extraction, matching against a standard. Make it concrete, make it fast, don't over-explain it.</p>
+ <p><strong>Don't show:</strong> The FI demo again unless they ask. We already showed it in January. Repeating it signals we haven't moved on from discovery.</p>
+ <p><strong>Draw on the whiteboard:</strong> The before/after of their current quote-to-contract flow as we understand it. Then the version with AI in it. Let them correct us. The corrections are the signal we need.</p>
+ <div style="margin-top:16px;padding:14px 18px;background:var(--bg-alt);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+ <div>
+ <div style="font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:3px;">Indicative demo available</div>
+ <div style="font-size:13px;color:var(--text-2);">A working prototype showing what the quote-to-contract AI could look like for S&amp;C — inbox, extraction, flags, pipeline view, and live AI chat.</div>
+ </div>
+ <a href="snc-demo.html" target="_blank" style="flex-shrink:0;background:var(--brand);color:#fff;font-size:13px;font-weight:700;padding:10px 18px;border-radius:5px;text-decoration:none;white-space:nowrap;">Open Demo →</a>
+ </div>
+ </div>
+ </div>
 
-    <div class="accordion">
-      <button class="accordion-trigger" onclick="toggle(this)">
-        <span class="acc-type deep">Frame</span>
-        How to frame the staircase
-        <span class="accordion-arrow">▶</span>
-      </button>
-      <div class="accordion-body">
-        <p>The staircase framing always works well here. We need something that:</p>
-        <ul>
-          <li>We can own our own destiny on (less dependency on their DevOps / internal teams)</li>
-          <li>Ships in 3 months or less</li>
-          <li>Has clear, measurable impact</li>
-          <li>Lives close to their existing process (Salesforce / M365)</li>
-        </ul>
-        <p>Quote-to-contract checks all four boxes. The ETO configurator does not — it's a phase two or three conversation. Be explicit about that so expectations are right.</p>
+ <div class="accordion">
+ <button class="accordion-trigger" onclick="toggle(this)">
+ <span class="acc-type deep">Frame</span>
+ How to frame the staircase
+ <span class="accordion-arrow">▶</span>
+ </button>
+ <div class="accordion-body">
+ <p>The staircase framing always works well here. We need something that:</p>
+ <ul>
+ <li>We can own our own destiny on (less dependency on their DevOps / internal teams)</li>
+ <li>Ships in 3 months or less</li>
+ <li>Has clear, measurable impact</li>
+ <li>Lives close to their existing process (Salesforce / M365)</li>
+ </ul>
+ <p>Quote-to-contract checks all four boxes. The ETO configurator does not — it's a phase two or three conversation. Be explicit about that so expectations are right.</p>
 
-        <table class="staircase" style="margin-top:16px;">
-          <thead>
-            <tr>
-              <th>Phase</th>
-              <th>Scope</th>
-              <th>Dependency</th>
-              <th>Timeline</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="phase-badge disc">Discovery</span></td>
-              <td>Whiteboard → pre-proposal. Define the problem, scope the solution, agree on success metrics.</td>
-              <td>None from their side</td>
-              <td>Now → 2 weeks</td>
-            </tr>
-            <tr>
-              <td><span class="phase-badge p1">Phase 1</span></td>
-              <td>Build in Conquer cloud. T&amp;C / spec extraction and review agent. Mocked against their Salesforce endpoints. Prove the thing works.</td>
-              <td>Sample docs + API schemas</td>
-              <td>6–8 weeks</td>
-            </tr>
-            <tr>
-              <td><span class="phase-badge p2">Phase 2</span></td>
-              <td>Deploy into S&amp;C's cloud environment. Live integration with Salesforce. Handover to their team.</td>
-              <td>DevOps access + AWS/Azure</td>
-              <td>4–6 weeks</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+ <table class="staircase" style="margin-top:16px;">
+ <thead>
+ <tr>
+ <th>Phase</th>
+ <th>Scope</th>
+ <th>Dependency</th>
+ <th>Timeline</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td><span class="phase-badge disc">Discovery</span></td>
+ <td>Whiteboard → pre-proposal. Define the problem, scope the solution, agree on success metrics.</td>
+ <td>None from their side</td>
+ <td>Now → 2 weeks</td>
+ </tr>
+ <tr>
+ <td><span class="phase-badge p1">Phase 1</span></td>
+ <td>Build in Conquer cloud. T&amp;C / spec extraction and review agent. Mocked against their Salesforce endpoints. Prove the thing works.</td>
+ <td>Sample docs + API schemas</td>
+ <td>6–8 weeks</td>
+ </tr>
+ <tr>
+ <td><span class="phase-badge p2">Phase 2</span></td>
+ <td>Deploy into S&amp;C's cloud environment. Live integration with Salesforce. Handover to their team.</td>
+ <td>DevOps access + AWS/Azure</td>
+ <td>4–6 weeks</td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+ </div>
 
-    <div class="accordion">
-      <button class="accordion-trigger" onclick="toggle(this)">
-        <span class="acc-type ask">Close</span>
-        How to close the session
-        <span class="accordion-arrow">▶</span>
-      </button>
-      <div class="accordion-body">
-        <p>Don't leave the room without a defined next step. The close should be: <strong>"Here's what we heard today. We'll turn this into a pre-proposal within two weeks — a clear problem statement, a proposed solution, a timeline, and a cost. You tell us where we've misunderstood something, and we iterate from there. Does that work?"</strong></p>
-        <p>If they're warm on quote-to-contract, ask directly who on their side would need to be involved in the pre-proposal review. Get names. That's the next relationship to open.</p>
-        <p>If Joseph or Ernst pushes on feasibility of the ETO configurator, don't shut it down — say you'd want to dig into it more in a follow-on session with the people closest to that process. Keep the door open.</p>
-      </div>
-    </div>
-  </div>
+ <div class="accordion">
+ <button class="accordion-trigger" onclick="toggle(this)">
+ <span class="acc-type ask">Close</span>
+ How to close the session
+ <span class="accordion-arrow">▶</span>
+ </button>
+ <div class="accordion-body">
+ <p>Don't leave the room without a defined next step. The close should be: <strong>"Here's what we heard today. We'll turn this into a pre-proposal within two weeks — a clear problem statement, a proposed solution, a timeline, and a cost. You tell us where we've misunderstood something, and we iterate from there. Does that work?"</strong></p>
+ <p>If they're warm on quote-to-contract, ask directly who on their side would need to be involved in the pre-proposal review. Get names. That's the next relationship to open.</p>
+ <p>If Joseph or Ernst pushes on feasibility of the ETO configurator, don't shut it down — say you'd want to dig into it more in a follow-on session with the people closest to that process. Keep the door open.</p>
+ </div>
+ </div>
+ </div>
 </div>
 
-<!-- ── WATCH-OUTS ── -->
 <div class="section" id="watchouts">
-  <div class="content-wrap">
-    <div class="section-eyebrow">Watch-Outs</div>
-    <h2 class="section-headline">Where this can go wrong</h2>
-    <p class="section-sub">Things that killed momentum on other accounts — and the S&amp;C-specific risks to manage.</p>
+ <div class="content-wrap">
+ <div class="section-eyebrow">Watch-Outs</div>
+ <h2 class="section-headline">Where this can go wrong</h2>
+ <p class="section-sub">Things that killed momentum on other accounts — and the S&amp;C-specific risks to manage.</p>
 
-    <div class="hook-block danger">
-      <span class="hook-label">Don't get dragged into the ERP rabbit hole</span>
-      Ernst or Anders H may try to pull us into the Oracle / inventory problem in detail. It's a real problem, but it's not our entry point. Acknowledge it, validate it, and redirect: "That's a really important problem — and our instinct is that the root cause is upstream in the language and process layer, not in the data. Let's make sure we nail the commercial process first, and then we'll have the credibility and the context to look at this properly."
-    </div>
+ <div class="hook-block danger">
+ <span class="hook-label">Don't get dragged into the ERP rabbit hole</span>
+ Ernst or Anders H may try to pull us into the Oracle / inventory problem in detail. It's a real problem, but it's not our entry point. Acknowledge it, validate it, and redirect: "That's a really important problem — and our instinct is that the root cause is upstream in the language and process layer, not in the data. Let's make sure we nail the commercial process first, and then we'll have the credibility and the context to look at this properly."
+ </div>
 
-    <div class="hook-block danger">
-      <span class="hook-label">Don't let the ETO configurator become the whole meeting</span>
-      Anders S is personally excited about this. It's genuinely interesting. But it's also genuinely complex and genuinely ambiguous — two engineers, same input, two outputs. That ambiguity is a red flag for fast delivery. Keep the conversation exploratory, not committal. "I want to spend more time on this with people who are close to the process — let's not rush it today."
-    </div>
+ <div class="hook-block danger">
+ <span class="hook-label">Don't let the ETO configurator become the whole meeting</span>
+ Anders S is personally excited about this. It's genuinely interesting. But it's also genuinely complex and genuinely ambiguous — two engineers, same input, two outputs. That ambiguity is a red flag for fast delivery. Keep the conversation exploratory, not committal. "I want to spend more time on this with people who are close to the process — let's not rush it today."
+ </div>
 
-    <div class="hook-block warn">
-      <span class="hook-label">Watch for scope creep before we've landed anything</span>
-      Five months to get this session. The pressure to close something is real. Don't over-commit to show progress. A tight, deliverable Phase 1 is worth more than a sprawling proposal we can't staff or ship.
-    </div>
+ <div class="hook-block warn">
+ <span class="hook-label">Watch for scope creep before we've landed anything</span>
+ Five months to get this session. The pressure to close something is real. Don't over-commit to show progress. A tight, deliverable Phase 1 is worth more than a sprawling proposal we can't staff or ship.
+ </div>
 
-    <div class="hook-block warn">
-      <span class="hook-label">Atlee is an asset, not a crutch</span>
-      She's in the room and she's trusted. But she's there to open doors, not to carry the session. If we lean on her too much, it signals we can't stand on our own. Use her for room-reading and relationship navigation, not for content.
-    </div>
+ <div class="hook-block warn">
+ <span class="hook-label">Atlee is an asset, not a crutch</span>
+ She's in the room and she's trusted. But she's there to open doors, not to carry the session. If we lean on her too much, it signals we can't stand on our own. Use her for room-reading and relationship navigation, not for content.
+ </div>
 
-    <div class="hook-block good">
-      <span class="hook-label">The energy is good — don't over-manage it</span>
-      Anders S said "love the energy" at the end of the January call. The room likes us. The biggest risk is being too buttoned-up and killing the warmth that got us here. Be direct. Be honest when we don't know something. That's what landed the first call.
-    </div>
-  </div>
+ <div class="hook-block warn">
+ <span class="hook-label">They may have moved on from quote-to-contract</span>
+ Atlee flagged this directly: S&amp;C may come in and say they've given it more thought and want to focus on something else. Don't be attached to the use case we prepped — be attached to the process. Open the session by checking if priorities have shifted. If they pivot, follow them. The playbook still works.
+ </div>
+
+ <div class="hook-block good">
+ <span class="hook-label">The energy is good — don't over-manage it</span>
+ Anders S said "love the energy" at the end of the January call. The room likes us. The biggest risk is being too buttoned-up and killing the warmth that got us here. Be direct. Be honest when we don't know something. That's what landed the first call.
+ </div>
+ </div>
 </div>
 
-<!-- ── HISTORY ── -->
 <div class="section alt" id="history">
-  <div class="content-wrap">
-    <div class="section-eyebrow">Account History</div>
-    <h2 class="section-headline">How we got here</h2>
-    <p class="section-sub">Five months from intro to whiteboard. Longer than it should have been, but the relationship held.</p>
+ <div class="content-wrap">
+ <div class="section-eyebrow">Account History</div>
+ <h2 class="section-headline">How we got here</h2>
+ <p class="section-sub">Five months from intro to whiteboard. Longer than it should have been, but the relationship held.</p>
 
-    <div class="timeline">
+ <div class="timeline">
 
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-dot green"></div><div class="tl-line"></div></div>
-        <div class="tl-date">Jan 30, 2026</div>
-        <div class="tl-content">
-          <div class="tl-title">Intro call — Friday 5 pm GMT</div>
-          <div class="tl-body">Full C-suite on. FI demo shown. Quote-to-contract, ETO configurator, and BOM/ERP all surfaced. Anders very complimentary. Whiteboard proposed. Meeting ended on strong energy.</div>
-        </div>
-      </div>
+ <div class="tl-item">
+ <div class="tl-left"><div class="tl-dot green"></div><div class="tl-line"></div></div>
+ <div class="tl-date">Jan 30, 2026</div>
+ <div class="tl-content">
+ <div class="tl-title">Intro call — Friday 5 pm GMT</div>
+ <div class="tl-body">Full C-suite on. FI demo shown. Quote-to-contract, ETO configurator, and BOM/ERP all surfaced. Anders very complimentary. Whiteboard proposed. Meeting ended on strong energy.</div>
+ </div>
+ </div>
 
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-dot amber"></div><div class="tl-line"></div></div>
-        <div class="tl-date">Feb – Mar 2026</div>
-        <div class="tl-content">
-          <div class="tl-title">Scheduling bottleneck</div>
-          <div class="tl-body">Multiple follow-ups to Anders and his EA Julie Evans. Atlee escalating directly. Anders confirmed interest but couldn't find a slot. Five separate chasers sent between Feb 6 and Mar 25.</div>
-        </div>
-      </div>
+ <div class="tl-item">
+ <div class="tl-left"><div class="tl-dot amber"></div><div class="tl-line"></div></div>
+ <div class="tl-date">Feb – Mar 2026</div>
+ <div class="tl-content">
+ <div class="tl-title">Scheduling bottleneck</div>
+ <div class="tl-body">Multiple follow-ups to Anders and his EA Julie Evans. Atlee escalating directly. Anders confirmed interest but couldn't find a slot. Five separate chasers sent between Feb 6 and Mar 25.</div>
+ </div>
+ </div>
 
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-dot amber"></div><div class="tl-line"></div></div>
-        <div class="tl-date">Mar 21, 2026</div>
-        <div class="tl-content">
-          <div class="tl-title">Commercial huddle — Prospiant POC identified as analogue</div>
-          <div class="tl-body">Bolaji flagged that the Prospiant/Gibraltar POC mirrors what S&amp;C needs. Plan: unbrand it, build an agenda around it, use it to move the session forward. Bolaji to present as new-to-the-business perspective.</div>
-        </div>
-      </div>
+ <div class="tl-item">
+ <div class="tl-left"><div class="tl-dot amber"></div><div class="tl-line"></div></div>
+ <div class="tl-date">Mar 21, 2026</div>
+ <div class="tl-content">
+ <div class="tl-title">Commercial huddle — Prospiant POC identified as analogue</div>
+ <div class="tl-body">Bolaji flagged that the Prospiant/Gibraltar POC mirrors what S&amp;C needs. Plan: unbrand it, build an agenda around it, use it to move the session forward. Bolaji to present as new-to-the-business perspective.</div>
+ </div>
+ </div>
 
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-dot green"></div><div class="tl-line"></div></div>
-        <div class="tl-date">Apr 2–3, 2026</div>
-        <div class="tl-content">
-          <div class="tl-title">Whiteboard confirmed</div>
-          <div class="tl-body">Anders Sjoelin sent Teams invite directly. Session confirmed: Tue Apr 7, 7–8:30 pm UK. All four S&amp;C execs confirmed. Atlee in-person. David attending. Tom off the session per David's decision.</div>
-        </div>
-      </div>
+ <div class="tl-item">
+ <div class="tl-left"><div class="tl-dot green"></div><div class="tl-line"></div></div>
+ <div class="tl-date">Apr 2–3, 2026</div>
+ <div class="tl-content">
+ <div class="tl-title">Whiteboard confirmed</div>
+ <div class="tl-body">Anders Sjoelin sent Teams invite directly. Session confirmed: Tue Apr 7, 7–8:30 pm UK. All four S&amp;C execs confirmed. Atlee in-person. David attending. Tom off the session per David's decision.</div>
+ </div>
+ </div>
 
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-dot brand"></div><div class="tl-line"></div></div>
-        <div class="tl-date">Apr 6, 2026</div>
-        <div class="tl-content">
-          <div class="tl-title">Prep call — 7 pm UK</div>
-          <div class="tl-body">Internal Conquer prep. Align on the opening, the POC to show, the questions to ask, and the close. Confirm Bolaji's Prospiant framing. Make sure Luke is briefed on remote setup.</div>
-        </div>
-      </div>
+ <div class="tl-item">
+ <div class="tl-left"><div class="tl-dot brand"></div><div class="tl-line"></div></div>
+ <div class="tl-date">Apr 6, 2026</div>
+ <div class="tl-content">
+ <div class="tl-title">Prep call with Atlee — 7 pm UK</div>
+ <div class="tl-body">Atlee provided deep manufacturing context: S&amp;C's #1 position in medium voltage switch gear, the two-bucket ETO model (basic configured vs. complex power), the full quote-to-contract process flow (consultation → preliminary engineering → RFQ → spec changes → estimation → quote → contract), and key terminology refinements. Confirmed S&amp;C may pivot focus areas on the call. Reviewed demo and briefing materials.</div>
+ </div>
+ </div>
 
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-dot brand"></div></div>
-        <div class="tl-date">Apr 7, 2026</div>
-        <div class="tl-content">
-          <div class="tl-title">Whiteboard · Chicago</div>
-          <div class="tl-body">The session. Leave with a clear use case agreed, names for the pre-proposal review, and a two-week timeline to send the pre-proposal.</div>
-        </div>
-      </div>
+ <div class="tl-item">
+ <div class="tl-left"><div class="tl-dot brand"></div></div>
+ <div class="tl-date">Apr 7, 2026</div>
+ <div class="tl-content">
+ <div class="tl-title">Whiteboard · Chicago</div>
+ <div class="tl-body">The session. Leave with a clear use case agreed, names for the pre-proposal review, and a two-week timeline to send the pre-proposal.</div>
+ </div>
+ </div>
 
-    </div>
-  </div>
+ </div>
+ </div>
 </div>
 
-<!-- ── DARK CTA ── -->
 <div class="section dark">
-  <div class="content-wrap">
-    <div class="section-eyebrow">Bottom Line</div>
-    <h2 class="section-headline">What winning looks like</h2>
-    <p class="section-sub">We leave the room with one agreed use case, two or three names for the next conversation, and a clear mandate to send a pre-proposal. That's it. Don't try to close more than that.</p>
+ <div class="content-wrap">
+ <div class="section-eyebrow">Bottom Line</div>
+ <h2 class="section-headline">What winning looks like</h2>
+ <p class="section-sub">We leave the room with one agreed use case, two or three names for the next conversation, and a clear mandate to send a pre-proposal. That's it. Don't try to close more than that.</p>
 
-    <div class="info-card" style="background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12);">
-      <div class="info-card-label" style="color: #6EE7B7;">The metric of success</div>
-      <p style="color: rgba(255,255,255,0.8);">David said it on the January call: <em>"our metric of success on this type of call is just that we don't scare you off enough that you wouldn't entertain the whiteboarding session."</em> We're past that bar. Now the metric is: we leave with a pre-proposal mandate and a timeline. Everything else is a bonus.</p>
-    </div>
-  </div>
+ <div class="info-card" style="background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12);">
+ <div class="info-card-label" style="color: #6EE7B7;">The metric of success</div>
+ <p style="color: rgba(255,255,255,0.8);">David said it on the January call: <em>"our metric of success on this type of call is just that we don't scare you off enough that you wouldn't entertain the whiteboarding session."</em> We're past that bar. Now the metric is: we leave with a pre-proposal mandate and a timeline. Everything else is a bonus.</p>
+ </div>
+ </div>
 </div>
 
 <footer>
-  <p>S&amp;C Electric · Whiteboard Prep · Tue 7 April 2026 &nbsp;·&nbsp; <strong>Conquer AI — Internal &amp; Confidential</strong></p>
+ <p>S&amp;C Electric · Whiteboard Prep · Tue 7 April 2026 &nbsp;·&nbsp; <strong>Conquer AI — Internal &amp; Confidential</strong></p>
 </footer>
 
 <script>
 function toggle(btn) {
-  const body = btn.nextElementSibling;
-  const arrow = btn.querySelector('.accordion-arrow');
-  const isOpen = body.classList.contains('open');
-  body.classList.toggle('open', !isOpen);
-  arrow.classList.toggle('open', !isOpen);
+ const body = btn.nextElementSibling;
+ const arrow = btn.querySelector('.accordion-arrow');
+ const isOpen = body.classList.contains('open');
+ body.classList.toggle('open', !isOpen);
+ arrow.classList.toggle('open', !isOpen);
 }
 
-// Highlight active nav link on scroll
 const sections = document.querySelectorAll('[id]');
 const navLinks = document.querySelectorAll('.nav-link');
 window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(s => {
-    if (window.scrollY >= s.offsetTop - 80) current = s.id;
-  });
-  navLinks.forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-  });
+ let current = '';
+ sections.forEach(s => {
+ if (window.scrollY >= s.offsetTop - 80) current = s.id;
+ });
+ navLinks.forEach(a => {
+ a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+ });
 }, { passive: true });
 </script>
 </body>

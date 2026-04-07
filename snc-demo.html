@@ -724,10 +724,12 @@ function Overview({ setTab }) {
       bg: 'var(--red-bg)',
       border: 'rgba(239,68,68,0.2)',
       steps: [
-        { icon:'📧', label:'RFQ lands in inbox', sub:'From any customer, in any format' },
-        { icon:'🕐', label:'Sits in queue', sub:'Hours or days before anyone opens it' },
+        { icon:'💡', label:'Consulting engineer approaches with preliminary ideas', sub:'From any customer, in any format' },
+        { icon:'🎯', label:'Preliminary engineering & design', sub:'Specs and requirements developed' },
+        { icon:'📧', label:'RFQ lands in inbox', sub:'Hours or days before anyone opens it' },
         { icon:'👤', label:'Someone reads it manually', sub:'34 pages. Every time.' },
-        { icon:'📝', label:'Key terms noted by hand', sub:'Voltage, delivery, LD clauses — if they catch them' },
+        { icon:'📝', label:'Key terms & estimation data noted by hand', sub:'Voltage, delivery, LD clauses, vendor pricing — if they catch them' },
+        { icon:'💰', label:'Manual estimation — vendor pricing, parts, lead times', sub:'Time-consuming process before a quote can be prepared' },
         { icon:'❓', label:'Non-standard terms missed', sub:'Or caught too late — after a price is already quoted' },
         { icon:'📋', label:'Re-keyed into Salesforce', sub:'Manual entry, prone to error' },
       ]
@@ -738,11 +740,14 @@ function Overview({ setTab }) {
       bg: 'var(--green-bg)',
       border: 'rgba(16,185,129,0.2)',
       steps: [
+        { icon:'💡', label:'Consulting engineer approaches with preliminary ideas', sub:'From any customer, in any format', ai:false },
+        { icon:'🎯', label:'Preliminary engineering & design', sub:'Specs and requirements developed', ai:false },
         { icon:'📧', label:'RFQ lands in inbox', sub:'From any customer, in any format', ai:false },
-        { icon:'🔍', label:'Classified in seconds', sub:'Document type, customer, product — identified automatically', ai:true },
+        { icon:'🔍', label:'Classified & extracted in seconds', sub:'Document type, customer, product, terms — identified automatically', ai:true },
         { icon:'⚡', label:'Every field extracted', sub:'Voltage, quantity, delivery, payment terms, LD clauses', ai:true },
         { icon:'⚖️', label:'Checked against S&C standard', sub:'Non-standard terms flagged before anyone opens the doc', ai:true },
-        { icon:'👤', label:'Salesperson sees what matters', sub:'Flags, actions, and full context — not a 34-page PDF', ai:false },
+        { icon:'💰', label:'Estimation data surfaced automatically', sub:'Vendor pricing, parts availability, lead times pulled from system', ai:true },
+        { icon:'👤', label:'Commercial team sees what matters', sub:'Flags, estimating data, and full context — ready to quote', ai:false },
         { icon:'📋', label:'Salesforce updated automatically', sub:'No re-keying. Opportunity record populated on receipt.', ai:false },
       ]
     }
@@ -758,7 +763,7 @@ function Overview({ setTab }) {
         borderRadius:'var(--radius-sm)', marginBottom:28, fontSize:13, color:'var(--text-secondary)'
       }}>
         <span style={{fontSize:16}}>⚠️</span>
-        <span><strong style={{color:'var(--amber)'}}>Indicative demo</strong> — all data is illustrative. Built to show what a Conquer AI solution could look like for S&C Electric's quote-to-contract process. Explore the tabs to see it in action.</span>
+        <span><strong style={{color:'var(--amber)'}}>Indicative demo</strong> — all data is illustrative. Built to show what a Conquer AI solution could look like for S&C Electric's upstream commercial process — from preliminary engineering through to contract. Explore the tabs to see it in action.</span>
       </div>
 
       {/* Hero */}
@@ -766,8 +771,8 @@ function Overview({ setTab }) {
         <div className="cover-left">
           <div className="cover-eyebrow">Conquer AI · Quote-to-Contract</div>
           <h1 className="cover-title">Your commercial team<br/>spends hours on<br/><span>documents. It shouldn't.</span></h1>
-          <p className="cover-sub">Every inbound RFQ, spec, and purchase order — read, extracted, checked against your commercial standards, and flagged in under two minutes. Before your salesperson opens their inbox.</p>
-          <div className="cover-stats">
+          <p className="cover-sub">Every inbound RFQ, spec, and purchase order — read, extracted, checked against your configuration standards, estimation data pulled, and flagged in under two minutes. Before your salesperson opens their inbox.</p>
+          <div className="cover-stats" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
             <div>
               <div className="stat-val">&lt;2 min</div>
               <div className="stat-lbl">From receipt to first review</div>
@@ -779,6 +784,10 @@ function Overview({ setTab }) {
             <div>
               <div className="stat-val">0</div>
               <div className="stat-lbl">Documents re-keyed into Salesforce</div>
+            </div>
+            <div>
+              <div className="stat-val">Auto</div>
+              <div className="stat-lbl">Estimation data surfaced per quote</div>
             </div>
           </div>
         </div>
@@ -880,6 +889,12 @@ function Overview({ setTab }) {
               body:'Every extracted field — product type, quantity, delivery, value, contact — is written into the Salesforce opportunity record on receipt. No re-keying. No transcription errors. The record is complete before anyone opens the email.',
               notAI:'Your team still manages the opportunity and owns the relationship.'
             },
+            {
+              icon:'💰', ai:true, title:'Estimation Support',
+              what:'What the AI does',
+              body:'Surfaces vendor pricing, parts availability, and lead time data relevant to each inbound requirement — reducing the manual estimation effort before a quote is issued.',
+              notAI:'Your estimating team reviews and owns the pricing sign-off.'
+            },
           ].map((card,i) => (
             <div key={i} style={{
               background:'white', border:'1px solid var(--border)',
@@ -899,7 +914,7 @@ function Overview({ setTab }) {
               <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',color:'var(--text-muted)',marginBottom:6}}>{card.what}</div>
               <div style={{fontSize:13,color:'var(--text-secondary)',lineHeight:1.65,marginBottom:12}}>{card.body}</div>
               <div style={{fontSize:12,color:'var(--text-muted)',lineHeight:1.5,paddingTop:10,borderTop:'1px solid var(--border)'}}>
-                <span style={{fontWeight:600}}>Human in the loop: </span>{card.notAI}
+                <span style={{fontWeight:600}}>Human in the loop: </span>{card.notAI} {card.title==='Estimation Support'?' Your team still owns the estimation sign-off.':''}
               </div>
             </div>
           ))}
@@ -963,7 +978,7 @@ function FlowDiagram() {
 
 const SUMMARIES = {
   1: "Duke Energy is requesting 12 units of 15kV Metal-Clad Switchgear — a standard S&C product configuration. The technical spec is clean. The commercial terms are not: their liquidated damages clause is double S&C's standard and needs legal sign-off before any quote is issued. Delivery at 16 weeks is tight but feasible subject to production capacity check.",
-  2: "NextEra Energy is specifying outdoor switchgear for a 480MW AI data centre campus — a high-value, high-visibility opportunity. Three flags require attention before responding: a significantly above-standard LD clause at 1%/week, a 63kA fault rating that falls outside S&C's standard product range, and a DNP3 SCADA integration requirement that adds scope and cost.",
+  2: "NextEra Energy is specifying outdoor switchgear for a 480MW AI data centre campus — a high-value, high-visibility opportunity. This falls into S&C's complex power equipment category — high-spec, high-value, engineered-to-order configurations where the variability is highest. Three flags require attention before responding: a significantly above-standard LD clause at 1%/week, a 63kA fault rating that falls outside S&C's standard product range, and a DNP3 SCADA integration requirement that adds scope and cost.",
   3: "Dominion Energy's purchase order is clean. Standard product, standard terms, standard payment. The AI found no exceptions. This PO is clear to process — no commercial review required.",
 };
 
